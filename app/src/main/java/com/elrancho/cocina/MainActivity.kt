@@ -37,6 +37,10 @@ class MainActivity : AppCompatActivity() {
             .post(formBody)
             .build()
 ///fwewfwef
+<<<<<<< HEAD
+=======
+        ///mañana seremos millonarios
+>>>>>>> 2.0.0
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
