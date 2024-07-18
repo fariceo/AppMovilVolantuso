@@ -39,6 +39,9 @@ class MainActivity : AppCompatActivity() {
 ///fwewfwef
         ///mañana seremos millonarios
 
+
+        ////estammos tratando de hacer todo lo posible por aprender a usar la programacion para movil y con esto ccrear proyectos interesantes
+
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 runOnUiThread {
