@@ -43,6 +43,7 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.android.volley:volley-cronet:1.2.1")
     implementation ("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.0")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.0")
