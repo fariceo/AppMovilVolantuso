@@ -9,6 +9,12 @@ import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
 
+
+
+import android.content.Intent
+import android.widget.Button
+
+
 class MainActivity : AppCompatActivity() {
     private lateinit var usuario: EditText
     private lateinit var producto: EditText
@@ -20,6 +26,14 @@ class MainActivity : AppCompatActivity() {
 
         usuario = findViewById(R.id.usuario)
         producto = findViewById(R.id.producto)
+
+        ///creando otro boton que me lleva al menu
+
+        val button = findViewById<Button>(R.id.menu)
+        button.setOnClickListener {
+            val intent = Intent(this, menu::class.java)
+            startActivity(intent)
+        }
     }
 
     fun guardar(view: View) {
@@ -36,11 +50,10 @@ class MainActivity : AppCompatActivity() {
             .url(url)
             .post(formBody)
             .build()
-///fwewfwef
-        ///mañana seremos millonarios
+///fwewfwefwedfewfdewfwefewfew
 
+        ///mañana tendre mucho dinero
 
-        ////estammos tratando de hacer todo lo posible por aprender a usar la programacion para movil y con esto ccrear proyectos interesantes
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {

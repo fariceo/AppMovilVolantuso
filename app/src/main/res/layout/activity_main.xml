@@ -25,4 +25,11 @@
         android:layout_height="wrap_content"
         android:text="Guardar"
         android:onClick="guardar" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/menu"
+        android:text="Menu"
+        android:onClick="menu"
+        />
 </LinearLayout>
