@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         producto = findViewById(R.id.producto)
 
 
+        ///con este boton vamos a la actividad menu
         val buttonNavigate: Button = findViewById(R.id.menu)
         buttonNavigate.setOnClickListener {
             // Create an Intent to start SecondActivity
