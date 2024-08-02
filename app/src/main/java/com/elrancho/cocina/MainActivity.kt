@@ -1,5 +1,7 @@
 package com.elrancho.cocina
 
+import android.content.ClipData.Item
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
@@ -9,11 +11,7 @@ import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
 
-
-
-import android.content.Intent
 import android.widget.Button
-
 
 class MainActivity : AppCompatActivity() {
     private lateinit var usuario: EditText
@@ -27,10 +25,10 @@ class MainActivity : AppCompatActivity() {
         usuario = findViewById(R.id.usuario)
         producto = findViewById(R.id.producto)
 
-        ///creando otro boton que me lleva al menu
 
-        val button = findViewById<Button>(R.id.menu)
-        button.setOnClickListener {
+        val buttonNavigate: Button = findViewById(R.id.menu)
+        buttonNavigate.setOnClickListener {
+            // Create an Intent to start SecondActivity
             val intent = Intent(this, menu::class.java)
             startActivity(intent)
         }

@@ -17,7 +17,8 @@
         android:id="@+id/producto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Producto" />
+        android:hint="Producto"
+        android:text="......."/>
 
     <Button
         android:id="@+id/btnGuardar"
@@ -25,11 +26,18 @@
         android:layout_height="wrap_content"
         android:text="Guardar"
         android:onClick="guardar" />
+
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:id="@+id/menu"
-        android:text="Menu"
+        android:layout_width="match_parent"
+        android:layout_height="61dp"
         android:onClick="menu"
-        />
+        android:text="ir a Menu" />
+<TextView
+    android:id="@+id/lista"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>
