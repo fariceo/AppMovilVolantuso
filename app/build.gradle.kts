@@ -43,7 +43,7 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.android.volley:volley-cronet:1.2.1")
     implementation ("com.squareup.okhttp3:okhttp:4.9.3")
-    implementation("androidx.recyclerview:recyclerview:1.3.2")
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.0")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.0")
@@ -53,4 +53,13 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
     implementation ("com.google.android.material:material:1.8.0")
+
+        implementation ("androidx.recyclerview:recyclerview:1.2.1")
+
+        implementation ("com.squareup.okhttp3:okhttp:4.9.1")
+        implementation ("com.squareup.okhttp3:logging-interceptor:4.9.1")
+
+
+
+
 }

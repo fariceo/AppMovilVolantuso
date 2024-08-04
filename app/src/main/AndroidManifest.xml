@@ -20,6 +20,9 @@
             android:name=".MainActivity2"
             android:exported="false" />
         <activity
+            android:name=".MainActivity3"
+            android:exported="false" />
+        <activity
             android:name=".menu"
             android:exported="false" />
         <activity
