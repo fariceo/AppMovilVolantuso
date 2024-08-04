@@ -12,6 +12,7 @@ import org.json.JSONObject
 import java.io.IOException
 
 import android.widget.Button
+import com.elrancho.cocina.consultaMysql.consulta
 
 class MainActivity : AppCompatActivity() {
     private lateinit var usuario: EditText
@@ -39,6 +40,14 @@ class MainActivity : AppCompatActivity() {
         buttonNavigate2.setOnClickListener {
             // Create an Intent to start SecondActivity
             val intent = Intent(this, MainActivity2::class.java)
+            startActivity(intent)
+        }
+
+        ///con este boton vamos a la actividad consulta
+        val buttonNavigate3: Button = findViewById(R.id.consulta)
+        buttonNavigate3.setOnClickListener {
+            // Create an Intent to start SecondActivity
+            val intent = Intent(this, consulta::class.java)
             startActivity(intent)
         }
     }
