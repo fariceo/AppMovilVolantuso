@@ -17,6 +17,21 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".carta.MenuActivity"
+            android:exported="false" />
+        <activity
+            android:name=".carta.RetrofitClient"
+            android:exported="false" />
+        <activity
+            android:name=".carta.CartaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".carta.MenuCocina"
+            android:exported="false" />
+        <activity
+            android:name=".carta.carta"
+            android:exported="false" />
+        <activity
             android:name=".consultaMysql.consulta"
             android:exported="false" />
         <activity

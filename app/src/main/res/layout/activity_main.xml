@@ -18,7 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Producto"
-        android:text="......."/>
+        android:text="......."
+        />
 
     <Button
         android:id="@+id/btnGuardar"
@@ -50,6 +51,15 @@
         android:layout_height="61dp"
         android:onClick="activity2"
         android:text="ir al nuevo activity" />
+
+    <Button
+        android:id="@+id/carta"
+        android:layout_width="match_parent"
+        android:layout_height="61dp"
+        android:onClick="carta"
+        android:text="ir a la carta" />
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

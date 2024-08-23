@@ -11,6 +11,9 @@ import okhttp3.*
 import org.json.JSONArray
 import java.io.IOException
 
+import androidx.recyclerview.widget.DividerItemDecoration
+
+
 class consulta : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
@@ -25,7 +28,14 @@ class consulta : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = ProductoAdapter(productos)
 
+// Añadir DividerItemDecoration al RecyclerView, lo que es lo mismo es dividir cada item del recicler view
+        val dividerItemDecoration = DividerItemDecoration(this, (recyclerView.layoutManager as LinearLayoutManager).orientation)
+        recyclerView.addItemDecoration(dividerItemDecoration)
+
+
+
         fetchProductos()
+
     }
 
     private fun fetchProductos() {
