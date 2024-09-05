@@ -17,31 +17,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".carta.MenuActivity"
-            android:exported="false" />
-        <activity
-            android:name=".carta.RetrofitClient"
-            android:exported="false" />
-        <activity
-            android:name=".carta.CartaActivity"
-            android:exported="false" />
-        <activity
-            android:name=".carta.MenuCocina"
+            android:name=".menuCarta.CartaMenu"
             android:exported="false" />
         <activity
             android:name=".carta.carta"
             android:exported="false" />
         <activity
             android:name=".consultaMysql.consulta"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity2"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity3"
-            android:exported="false" />
-        <activity
-            android:name=".menu"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

@@ -39,27 +39,17 @@
         android:layout_width="match_parent"
         android:layout_height="61dp"
         android:onClick="consulta"
-        android:text="ir a consulta" />
+        android:text="Ventas" />
 <TextView
     android:id="@+id/lista"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"/>
-
-    <Button
-        android:id="@+id/MainActivity2"
-        android:layout_width="match_parent"
-        android:layout_height="61dp"
-        android:onClick="activity2"
-        android:text="ir al nuevo activity" />
-
     <Button
         android:id="@+id/carta"
         android:layout_width="match_parent"
         android:layout_height="61dp"
-        android:onClick="carta"
-        android:text="ir a la carta" />
-
-
+        android:onClick="consulta"
+        android:text="ir a ver la carta" />
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

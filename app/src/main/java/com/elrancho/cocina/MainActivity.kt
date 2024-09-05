@@ -14,13 +14,15 @@ import java.io.IOException
 import android.widget.Button
 import androidx.recyclerview.widget.LinearLayoutManager
 
+
 import com.elrancho.cocina.consultaMysql.consulta
+import com.elrancho.cocina.menuCarta.CartaMenu
 
 class MainActivity : AppCompatActivity() {
     private lateinit var usuario: EditText
     private lateinit var producto: EditText
     private val client = OkHttpClient()
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -29,26 +31,24 @@ class MainActivity : AppCompatActivity() {
         producto = findViewById(R.id.producto)
 
 
-        ///con este boton vamos a la actividad menu
-        val buttonNavigate: Button = findViewById(R.id.menu)
-        buttonNavigate.setOnClickListener {
-            // Create an Intent to start SecondActivity
-            val intent = Intent(this, menu::class.java)
-            startActivity(intent)
-        }
-
 
 
         ///con este boton vamos a la actividad consulta
-        val buttonNavigate3: Button = findViewById(R.id.consulta)
-        buttonNavigate3.setOnClickListener {
+        val buttonNavigate2: Button = findViewById(R.id.consulta)
+        buttonNavigate2.setOnClickListener {
             // Create an Intent to start SecondActivity
             val intent = Intent(this, consulta::class.java)
             startActivity(intent)
         }
 
 
-
+///con este boton vamos a la actividad carta
+        val buttonNavigate3: Button = findViewById(R.id.carta)
+        buttonNavigate3.setOnClickListener {
+            // Create an Intent to start SecondActivity
+            val intent = Intent(this,CartaMenu::class.java)
+            startActivity(intent)
+        }
     }
 
     fun guardar(view: View) {
