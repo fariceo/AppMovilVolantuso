@@ -2,14 +2,18 @@ package com.elrancho.cocina.menuCarta
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.elrancho.cocina.R
+import com.elrancho.cocina.R.id.agregar_producto
 import okhttp3.*
 import org.json.JSONArray
 import java.io.IOException
+
+
 
 class CartaMenu : AppCompatActivity() {
 
@@ -34,6 +38,8 @@ class CartaMenu : AppCompatActivity() {
         recyclerView.addItemDecoration(dividerItemDecoration)
 
         fetchProductos()
+
+
     }
 
     private fun fetchProductos() {
