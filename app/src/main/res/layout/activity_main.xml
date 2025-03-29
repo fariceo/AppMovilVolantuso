@@ -4,8 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
-
-
+    <TextView
+        android:id="@+id/usernameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bienvenido, Usuario"
+        android:textSize="18sp" />
     <EditText
         android:id="@+id/usuario"
         android:layout_width="match_parent"
@@ -28,12 +32,7 @@
         android:text="Guardar"
         android:onClick="guardar" />
 
-    <Button
-        android:id="@+id/menu"
-        android:layout_width="match_parent"
-        android:layout_height="61dp"
-        android:onClick="menu"
-        android:text="ir a Menu" />
+
     <Button
         android:id="@+id/consulta"
         android:layout_width="match_parent"
@@ -50,6 +49,16 @@
         android:layout_height="61dp"
         android:onClick="consulta"
         android:text="ir a ver la carta" />
+
+
+    <Button
+        android:id="@+id/iralogin"
+        android:layout_width="match_parent"
+        android:layout_height="61dp"
+        android:onClick="loginButton"
+        android:text="Login" />
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
