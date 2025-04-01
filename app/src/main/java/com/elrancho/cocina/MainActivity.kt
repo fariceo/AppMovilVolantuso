@@ -15,6 +15,7 @@ import java.io.IOException
 import com.elrancho.cocina.consultaMysql.consulta
 import com.elrancho.cocina.menuCarta.CartaMenu
 import com.elrancho.cocina.usuarios.login.LoginActivity
+import com.elrancho.cocina.compras.GastosActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var usuario: EditText
@@ -27,6 +28,10 @@ class MainActivity : AppCompatActivity() {
 
         usuario = findViewById(R.id.usuario)
         producto = findViewById(R.id.producto)
+
+        //ver gastos
+        val btnVerGastos: Button = findViewById(R.id.btnVerGastos)
+
 
         // Recupera el nombre del usuario desde SharedPreferences
         val sharedPreferences = getSharedPreferences("user_session", Context.MODE_PRIVATE)
@@ -59,6 +64,12 @@ class MainActivity : AppCompatActivity() {
         val buttonNavigate1: Button = findViewById(R.id.iralogin)
         buttonNavigate1.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
+
+        // Configurando el botón para redirigir a GastosActivity
+        btnVerGastos.setOnClickListener {
+            val intent = Intent(this, GastosActivity::class.java)
             startActivity(intent)
         }
     }
