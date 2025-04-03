@@ -47,6 +47,22 @@
             android:layout_margin="8dp"
             android:backgroundTint="#6f911b"/>
     </LinearLayout>
+    <!-- TextView para mostrar el total de gastos esperados -->
+    <TextView
+        android:id="@+id/txtGastosEsperados"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gastos esperados: $0"
+        android:textSize="18sp"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- TextView para mostrar el total de gastos según la categoría (diario, semanal o mensual) -->
+    <TextView
+        android:id="@+id/txtGastosCategoria"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gastos Diario: $0"
+        android:textSize="18sp"/>
 
     <!-- RecyclerView para mostrar los gastos -->
     <androidx.recyclerview.widget.RecyclerView

@@ -36,20 +36,38 @@ class GastosAdapter(private val listaGastos: List<Gasto>) :
         val gasto = listaGastos[position]
         holder.txtProducto.text = gasto.producto
         holder.txtPrecio.text = "S/. ${gasto.precio}"
-
+        // Si el gasto tiene estado 1, cambiar la opacidad al 75%
+        if (gasto.estado == 1) {
+            holder.itemView.alpha = 0.75f  // Reducir opacidad
+            holder.checkBox.isEnabled = false  // Deshabilitar interacción
+        } else {
+            holder.itemView.alpha = 1.0f  // Normal
+            holder.checkBox.isEnabled = true  // Habilitar interacción
+        }
         // Eliminar el listener anterior antes de establecer el nuevo estado
         holder.checkBox.setOnCheckedChangeListener(null)
         holder.checkBox.isChecked = gasto.estado == 1
 
         // Asignar nuevo listener
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
-            val nuevoEstado = if (isChecked) 1 else 0
-            actualizarEstadoGasto(holder.itemView.context, gasto.id, nuevoEstado)
+            if (gasto.estado == 1) {
+                // Si el estado ya es 1, mostrar alerta
+                Toast.makeText(holder.itemView.context, "Este producto ya ha sido adquirido", Toast.LENGTH_SHORT).show()
+            } else {
+                val nuevoEstado = if (isChecked) 1 else 0
+                actualizarEstadoGasto(holder.itemView.context, gasto.id, nuevoEstado)
+            }
         }
     }
 
 
     override fun getItemCount(): Int = listaGastos.size
+
+    // Método para ordenar la lista de gastos antes de pasarla al RecyclerView
+    fun sortGastos() {
+        // Se ordenan primero los elementos con estado 0
+        listaGastos.sortedWith(compareBy { it.estado })
+    }
 }
 fun actualizarEstadoGasto(context: Context, id: Int, estado: Int) {
     Log.d("ActualizarEstado", "Enviando ID: $id, Estado: $estado") // Verificar datos antes de enviar

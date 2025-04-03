@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +29,10 @@ class GastosActivity : AppCompatActivity() {
     private lateinit var btnRegistrar: Button
     private val listaGastos = mutableListOf<Gasto>()
 
+    // Referencias a los TextView
+    private lateinit var txtGastosEsperados: TextView
+    private lateinit var txtGastosCategoria: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gastos)
@@ -40,6 +45,10 @@ class GastosActivity : AppCompatActivity() {
         inputCantidad = findViewById(R.id.inputCantidad)
         inputPrecio = findViewById(R.id.inputPrecio)
         btnRegistrar = findViewById(R.id.btnRegistrarCompra)
+
+        // Referencias a los TextView
+        txtGastosEsperados = findViewById(R.id.txtGastosEsperados)
+        txtGastosCategoria = findViewById(R.id.txtGastosCategoria)
 
         val botonDiario: Button = findViewById(R.id.botonDiario)
         val botonSemanal: Button = findViewById(R.id.botonSemanal)
@@ -71,18 +80,36 @@ class GastosActivity : AppCompatActivity() {
             { response ->
                 try {
                     listaGastos.clear()
+
+                    var totalEsperados = 0.0
+                    var totalCategoria = 0.0
+
                     for (i in 0 until response.length()) {
                         val item = response.getJSONObject(i)
-                        val id = item.getInt("id") // Obtiene el ID desde la API
+                        val id = item.getInt("id")
                         val producto = item.getString("producto")
                         val precio = item.getDouble("total")
                         val estado = item.getInt("estado")
 
-                        listaGastos.add(Gasto(id, producto, precio, estado)) // Ahora se agrega con el ID correcto
+                        // Calcular los totales según el estado
+                        if (estado == 0) {
+                            totalEsperados += precio
+                        } else if (estado == 1) {
+                            totalCategoria += precio
+                        }
+
+                        listaGastos.add(Gasto(id, producto, precio, estado))
                     }
 
-                    gastosAdapter = GastosAdapter(listaGastos)
+                    // Ordenar la lista antes de pasarla al adaptador
+                    val listaOrdenada = listaGastos.sortedWith(compareBy { it.estado }).toMutableList()
+                    gastosAdapter = GastosAdapter(listaOrdenada)
                     recyclerView.adapter = gastosAdapter
+
+                    // Actualizar los TextViews con los totales
+                    txtGastosEsperados.text = "Gastos esperados: $${"%.2f".format(totalEsperados)}"
+                    txtGastosCategoria.text = "Gastos $filtro: $${"%.2f".format(totalCategoria)}"
+
                 } catch (e: JSONException) {
                     Toast.makeText(this, "Error al procesar datos", Toast.LENGTH_SHORT).show()
                 }
@@ -90,7 +117,6 @@ class GastosActivity : AppCompatActivity() {
             { error ->
                 Toast.makeText(this, "Error en la conexión: ${error.message}", Toast.LENGTH_SHORT).show()
             })
-
         requestQueue.add(jsonArrayRequest)
     }
 
