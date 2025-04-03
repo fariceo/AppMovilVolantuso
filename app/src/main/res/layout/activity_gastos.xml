@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,6 +15,7 @@
         android:background="#c0530a"
         android:textColor="#ffffff"/>
 
+    <!-- Botones -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,25 +28,67 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Diario"
-            android:layout_margin="8dp" />
+            android:layout_margin="8dp"
+            android:backgroundTint="#6f911b"/>
 
         <Button
             android:id="@+id/botonSemanal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Semanal"
-            android:layout_margin="8dp" />
+            android:layout_margin="8dp"
+            android:backgroundTint="#6f911b"/>
 
         <Button
             android:id="@+id/botonMensual"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Mensual"
-            android:layout_margin="8dp" />
+            android:layout_margin="8dp"
+            android:backgroundTint="#6f911b"/>
     </LinearLayout>
 
+    <!-- RecyclerView para mostrar los gastos -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerGastos"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Formulario para agregar un nuevo gasto -->
+    <LinearLayout
+        android:id="@+id/formularioRegistro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/inputProducto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Producto"/>
+
+        <EditText
+            android:id="@+id/inputCantidad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Cantidad"/>
+
+        <EditText
+            android:id="@+id/inputPrecio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Precio"
+            />
+
+        <Button
+            android:id="@+id/btnRegistrarCompra"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registrar Compra"
+            android:backgroundTint="#6f911b"
+            android:layout_gravity="center"
+            android:padding="10dp"/>
+    </LinearLayout>
 </LinearLayout>

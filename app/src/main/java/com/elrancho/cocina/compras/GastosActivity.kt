@@ -1,21 +1,31 @@
 package com.elrancho.cocina.compras
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
+import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.elrancho.cocina.R
 import org.json.JSONException
+import org.json.JSONObject
 
 class GastosActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var gastosAdapter: GastosAdapter
+    private lateinit var formulario: LinearLayout
+    private lateinit var inputProducto: EditText
+    private lateinit var inputCantidad: EditText
+    private lateinit var inputPrecio: EditText
+    private lateinit var btnRegistrar: Button
     private val listaGastos = mutableListOf<Gasto>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,23 +35,39 @@ class GastosActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerGastos)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Botones
+        formulario = findViewById(R.id.formularioRegistro)
+        inputProducto = findViewById(R.id.inputProducto)
+        inputCantidad = findViewById(R.id.inputCantidad)
+        inputPrecio = findViewById(R.id.inputPrecio)
+        btnRegistrar = findViewById(R.id.btnRegistrarCompra)
+
         val botonDiario: Button = findViewById(R.id.botonDiario)
         val botonSemanal: Button = findViewById(R.id.botonSemanal)
         val botonMensual: Button = findViewById(R.id.botonMensual)
 
-        // Eventos de botones para filtrar gastos
-        botonDiario.setOnClickListener { obtenerGastos("diario") }
-        botonSemanal.setOnClickListener { obtenerGastos("semanal") }
-        botonMensual.setOnClickListener { obtenerGastos("mensual") }
+        botonDiario.setOnClickListener {
+            obtenerGastos("diario")
+            formulario.visibility = View.VISIBLE
+        }
+        botonSemanal.setOnClickListener {
+            obtenerGastos("semanal")
+            formulario.visibility = View.GONE
+        }
+        botonMensual.setOnClickListener {
+            obtenerGastos("mensual")
+            formulario.visibility = View.GONE
+        }
 
-        // Carga inicial (puede ser el diario por defecto)
+        btnRegistrar.setOnClickListener { registrarCompra() }
         obtenerGastos("diario")
     }
 
     private fun obtenerGastos(filtro: String) {
         val url = "https://elpollovolantuso.com/asi_sistema/android/consulta_gastos.php?filtro=$filtro"
         val requestQueue = Volley.newRequestQueue(this)
+
+        // Mostrar o esconder el formulario dependiendo del filtro
+        formulario.visibility = if (filtro == "diario") View.VISIBLE else View.GONE
 
         val jsonArrayRequest = JsonArrayRequest(
             Request.Method.GET, url, null,
@@ -65,5 +91,53 @@ class GastosActivity : AppCompatActivity() {
             })
 
         requestQueue.add(jsonArrayRequest)
+    }
+
+
+    private fun registrarCompra() {
+        val producto = inputProducto.text.toString().trim()
+        val cantidad = inputCantidad.text.toString().trim()
+        val precio = inputPrecio.text.toString().trim()
+
+        if (producto.isEmpty() || cantidad.isEmpty() || precio.isEmpty()) {
+            Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val url = "https://elpollovolantuso.com/asi_sistema/android/registro_gasto.php"
+        val requestQueue = Volley.newRequestQueue(this)
+
+        val stringRequest = object : StringRequest(
+            Request.Method.POST, url,
+            { response ->
+                try {
+                    val jsonResponse = JSONObject(response)
+                    val success = jsonResponse.getBoolean("success")
+                    if (success) {
+                        Toast.makeText(this, "Compra registrada con éxito", Toast.LENGTH_SHORT).show()
+                        inputProducto.text.clear()
+                        inputCantidad.text.clear()
+                        inputPrecio.text.clear()
+                        obtenerGastos("diario")
+                    } else {
+                        Toast.makeText(this, "Error al registrar compra", Toast.LENGTH_SHORT).show()
+                    }
+                } catch (e: JSONException) {
+                    Toast.makeText(this, "Error en el servidor", Toast.LENGTH_SHORT).show()
+                }
+            },
+            { error ->
+                Toast.makeText(this, "Error en la conexión: ${error.message}", Toast.LENGTH_SHORT).show()
+            }) {
+            override fun getParams(): MutableMap<String, String> {
+                val params = HashMap<String, String>()
+                params["producto"] = producto
+                params["cantidad"] = cantidad
+                params["precio"] = precio
+                return params
+            }
+        }
+
+        requestQueue.add(stringRequest)
     }
 }
