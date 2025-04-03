@@ -21,4 +21,8 @@
         android:text="Precio"
         android:textSize="16sp"
         android:textStyle="bold" />
+    <CheckBox
+        android:id="@+id/checkBoxGasto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>

@@ -66,9 +66,6 @@ class GastosActivity : AppCompatActivity() {
         val url = "https://elpollovolantuso.com/asi_sistema/android/consulta_gastos.php?filtro=$filtro"
         val requestQueue = Volley.newRequestQueue(this)
 
-        // Mostrar o esconder el formulario dependiendo del filtro
-        formulario.visibility = if (filtro == "diario") View.VISIBLE else View.GONE
-
         val jsonArrayRequest = JsonArrayRequest(
             Request.Method.GET, url, null,
             { response ->
@@ -76,10 +73,14 @@ class GastosActivity : AppCompatActivity() {
                     listaGastos.clear()
                     for (i in 0 until response.length()) {
                         val item = response.getJSONObject(i)
+                        val id = item.getInt("id") // Obtiene el ID desde la API
                         val producto = item.getString("producto")
                         val precio = item.getDouble("total")
-                        listaGastos.add(Gasto(producto, precio))
+                        val estado = item.getInt("estado")
+
+                        listaGastos.add(Gasto(id, producto, precio, estado)) // Ahora se agrega con el ID correcto
                     }
+
                     gastosAdapter = GastosAdapter(listaGastos)
                     recyclerView.adapter = gastosAdapter
                 } catch (e: JSONException) {
@@ -92,7 +93,6 @@ class GastosActivity : AppCompatActivity() {
 
         requestQueue.add(jsonArrayRequest)
     }
-
 
     private fun registrarCompra() {
         val producto = inputProducto.text.toString().trim()
