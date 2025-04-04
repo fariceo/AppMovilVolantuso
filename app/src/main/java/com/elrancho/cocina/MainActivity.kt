@@ -6,29 +6,31 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.elrancho.cocina.compras.GastosActivity
+import com.elrancho.cocina.consultaMysql.consulta
+import com.elrancho.cocina.menuCarta.CartaMenu
+import com.elrancho.cocina.ordenes.PedidosActivity
+import com.elrancho.cocina.usuarios.login.LoginActivity
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
-import com.elrancho.cocina.consultaMysql.consulta
-import com.elrancho.cocina.menuCarta.CartaMenu
-import com.elrancho.cocina.usuarios.login.LoginActivity
-import com.elrancho.cocina.compras.GastosActivity
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var usuario: EditText
     private lateinit var producto: EditText
     private val client = OkHttpClient()
-
+    private lateinit var btnIngresarOrden: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         usuario = findViewById(R.id.usuario)
         producto = findViewById(R.id.producto)
-
+        // Inicializa el botón obteniendo su referencia por el ID
+        btnIngresarOrden = findViewById(R.id.btnIngresarOrden);
         //ver gastos
         val btnVerGastos: Button = findViewById(R.id.btnVerGastos)
 
@@ -72,6 +74,12 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, GastosActivity::class.java)
             startActivity(intent)
         }
+
+        // boton para ir a ingresar pedido
+        btnIngresarOrden.setOnClickListener(View.OnClickListener { // Crea un Intent para iniciar la PedidosActivity
+            val intent = Intent(this@MainActivity, PedidosActivity::class.java)
+            startActivity(intent)
+        })
     }
 
     fun guardar(view: View) {
