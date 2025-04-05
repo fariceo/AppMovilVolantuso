@@ -27,8 +27,8 @@
             android:textSize="25sp"
             android:textStyle="bold"
             android:gravity="center"
-            android:background="#c0530a"
-            android:textColor="#ffffff"
+            android:background="#e0da07"
+            android:textColor="#001969"
             android:paddingBottom="8dp"/>
 
     </LinearLayout>
@@ -103,19 +103,22 @@
             android:id="@+id/inputProducto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Producto"/>
+            android:hint="Producto"
+            />
 
         <EditText
             android:id="@+id/inputCantidad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Cantidad"/>
+            android:hint="Cantidad"
+            />
 
         <EditText
             android:id="@+id/inputPrecio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Precio"
+
             />
 
         <Button
@@ -123,7 +126,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Registrar Compra"
-            android:backgroundTint="#6f911b"
+            android:backgroundTint="#132632"
             android:layout_gravity="center"
             android:padding="10dp"/>
     </LinearLayout>

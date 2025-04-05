@@ -22,6 +22,7 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.elrancho.cocina.MainActivity
 
+
 class PedidosActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
@@ -90,12 +91,12 @@ class PedidosActivity : AppCompatActivity() {
         })
 
 
-
         // Escuchar cambios de cantidad
         cantidadEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 actualizarTotal()
             }
+
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
@@ -112,7 +113,8 @@ class PedidosActivity : AppCompatActivity() {
         }
 
         // Cargar la imagen desde una URL usando Glide
-        val urlImagen ="https://thumbs.dreamstime.com/b/vector-de-icono-l%C3%ADnea-lista-pedidos-la-%C3%B3rdenes-vectores-archivos-f%C3%A1cil-editar-277106601.jpg"
+        val urlImagen =
+            "https://thumbs.dreamstime.com/b/vector-de-icono-l%C3%ADnea-lista-pedidos-la-%C3%B3rdenes-vectores-archivos-f%C3%A1cil-editar-277106601.jpg"
         Glide.with(this)
             .load(urlImagen)
             .into(imagenDesdeUrl)
@@ -127,7 +129,8 @@ class PedidosActivity : AppCompatActivity() {
     }
 
     private fun buscarUsuarios(nombre: String) {
-        val url = "https://elpollovolantuso.com/asi_sistema/android/buscar_usuario.php?nombre=$nombre"
+        val url =
+            "https://elpollovolantuso.com/asi_sistema/android/buscar_usuario.php?nombre=$nombre"
         val request = StringRequest(com.android.volley.Request.Method.GET, url, { response ->
             val usuariosJson = JSONArray(response)
             val listaUsuarios = mutableListOf<UsuarioSaldo>()
@@ -139,20 +142,23 @@ class PedidosActivity : AppCompatActivity() {
                 listaUsuarios.add(UsuarioSaldo(nombreUsuario, saldo))
             }
 
-            recyclerViewUsuarios.adapter = UsuarioAdapter(listaUsuarios) { usuario ->
-                editTextBuscarUsuario.setText(usuario.nombre)
-                nombreUsuarioSeleccionado = usuario.nombre
-                textViewSaldo.text = "Saldo pendiente: $%.2f".format(usuario.saldo)
-
-                usuarioSeleccionado = usuario // ✅ ESTA LÍNEA ES CLAVE
-
-                recyclerViewUsuarios.visibility = RecyclerView.GONE
-                usuarioYaSeleccionado = true
+            if (listaUsuarios.isEmpty()) {
+                // Si no se encuentra ningún usuario, permitir que el texto ingresado sea válido
+                textViewSaldo.text =
+                    "Saldo pendiente: $0.00"  // Se puede ajustar este valor si lo deseas
+                usuarioSeleccionado = null
+            } else {
+                // Si se encuentran usuarios, se maneja la selección
+                recyclerViewUsuarios.adapter = UsuarioAdapter(listaUsuarios) { usuario ->
+                    editTextBuscarUsuario.setText(usuario.nombre)
+                    nombreUsuarioSeleccionado = usuario.nombre
+                    textViewSaldo.text = "Saldo pendiente: $%.2f".format(usuario.saldo)
+                    usuarioSeleccionado = usuario // Se asigna el usuario seleccionado
+                    recyclerViewUsuarios.visibility = RecyclerView.GONE
+                    usuarioYaSeleccionado = true
+                }
+                recyclerViewUsuarios.visibility = RecyclerView.VISIBLE
             }
-
-
-
-            recyclerViewUsuarios.visibility = RecyclerView.VISIBLE // Mostrar lista de usuarios
 
         }, {
             Toast.makeText(this, "Error al buscar usuario", Toast.LENGTH_SHORT).show()
@@ -160,6 +166,7 @@ class PedidosActivity : AppCompatActivity() {
 
         Volley.newRequestQueue(this).add(request)
     }
+
 
     private fun buscarProducto(nombre: String) {
         val url = "https://elpollovolantuso.com/asi_sistema/android/buscar_menu.php?nombre=$nombre"
@@ -203,7 +210,19 @@ class PedidosActivity : AppCompatActivity() {
     private fun registrarPedido() {
         val cantidad = cantidadEditText.text.toString().toIntOrNull()
         val producto = productoSeleccionado ?: return
-        val usuario = usuarioSeleccionado?.nombre ?: return
+
+        // Verificar si el usuario está seleccionado, si no lo está, usar el texto del EditText
+        val usuario = if (usuarioSeleccionado != null) {
+            usuarioSeleccionado?.nombre ?: "" // Si el usuario es null, asigna una cadena vacía
+        } else {
+            val usuarioDesdeEditText = editTextBuscarUsuario.text.toString().trim()
+            if (usuarioDesdeEditText.isEmpty()) {
+                Toast.makeText(this, "Por favor, selecciona o ingresa un usuario válido", Toast.LENGTH_SHORT).show()
+                return
+            } else {
+                usuarioDesdeEditText // Usar el texto del EditText si no está vacío
+            }
+        }
 
         if (cantidad == null || cantidad <= 0) {
             Toast.makeText(this, "Cantidad inválida", Toast.LENGTH_SHORT).show()
@@ -217,12 +236,12 @@ class PedidosActivity : AppCompatActivity() {
         val url = "https://elpollovolantuso.com/asi_sistema/android/insertar_producto.php"
         val request = object : StringRequest(com.android.volley.Request.Method.POST, url, {
             Toast.makeText(this, "Pedido registrado correctamente", Toast.LENGTH_SHORT).show()
-            // ✅ Limpiar campos
+            // Limpiar campos
             buscarEditText.setText("")        // Limpiar búsqueda de producto
             cantidadEditText.setText("")     // Limpiar cantidad
             totalTextView.text = "Total: $0.00" // Reiniciar total
             productoSeleccionado = null      // Limpiar producto seleccionado
-            // ✅ Limpiar RecyclerView
+            // Limpiar RecyclerView
             adapter = ProductoAdapter(emptyList()) { }
             recyclerView.adapter = adapter
         }, {
@@ -230,7 +249,7 @@ class PedidosActivity : AppCompatActivity() {
         }) {
             override fun getParams(): MutableMap<String, String> {
                 return mutableMapOf(
-                    "usuario" to usuario,
+                    "usuario" to usuario, // Aseguramos que siempre haya un valor válido
                     "producto" to producto.nombre,
                     "cantidad" to cantidad.toString(),
                     "precio" to producto.precio.toString(),
@@ -246,4 +265,6 @@ class PedidosActivity : AppCompatActivity() {
 
         Volley.newRequestQueue(this).add(request)
     }
+
+
 }

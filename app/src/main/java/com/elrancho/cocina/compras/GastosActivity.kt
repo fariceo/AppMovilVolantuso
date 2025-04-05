@@ -60,6 +60,10 @@ class GastosActivity : AppCompatActivity() {
         val botonSemanal: Button = findViewById(R.id.botonSemanal)
         val botonMensual: Button = findViewById(R.id.botonMensual)
 
+        // Establecer el formulario visible por defecto
+        formulario.visibility = View.VISIBLE
+
+
         botonDiario.setOnClickListener {
             obtenerGastos("diario")
             formulario.visibility = View.VISIBLE
