@@ -17,6 +17,7 @@ import com.android.volley.toolbox.Volley
 import com.elrancho.cocina.R
 import org.json.JSONException
 import org.json.JSONObject
+import android.util.Log
 
 class GastosActivity : AppCompatActivity() {
 
@@ -79,6 +80,8 @@ class GastosActivity : AppCompatActivity() {
             Request.Method.GET, url, null,
             { response ->
                 try {
+                    Log.d("GastosActivity", "Respuesta JSON: $response")
+
                     listaGastos.clear()
 
                     var totalEsperados = 0.0
@@ -86,10 +89,12 @@ class GastosActivity : AppCompatActivity() {
 
                     for (i in 0 until response.length()) {
                         val item = response.getJSONObject(i)
-                        val id = item.getInt("id")
-                        val producto = item.getString("producto")
-                        val precio = item.getDouble("total")
-                        val estado = item.getInt("estado")
+
+                        // Validar si las claves existen antes de acceder a ellas
+                        val id = if (item.has("id")) item.getInt("id") else -1
+                        val producto = item.optString("producto", "Desconocido")
+                        val precio = item.optDouble("total", 0.0)
+                        val estado = item.optInt("estado", -1)
 
                         // Calcular los totales según el estado
                         if (estado == 0) {
@@ -101,22 +106,23 @@ class GastosActivity : AppCompatActivity() {
                         listaGastos.add(Gasto(id, producto, precio, estado))
                     }
 
-                    // Ordenar la lista antes de pasarla al adaptador
                     val listaOrdenada = listaGastos.sortedWith(compareBy { it.estado }).toMutableList()
                     gastosAdapter = GastosAdapter(listaOrdenada)
                     recyclerView.adapter = gastosAdapter
 
-                    // Actualizar los TextViews con los totales
                     txtGastosEsperados.text = "Gastos esperados: $${"%.2f".format(totalEsperados)}"
                     txtGastosCategoria.text = "Gastos $filtro: $${"%.2f".format(totalCategoria)}"
 
                 } catch (e: JSONException) {
+                    Log.e("GastosActivity", "Error al procesar datos", e)
                     Toast.makeText(this, "Error al procesar datos", Toast.LENGTH_SHORT).show()
                 }
             },
             { error ->
                 Toast.makeText(this, "Error en la conexión: ${error.message}", Toast.LENGTH_SHORT).show()
             })
+
+
         requestQueue.add(jsonArrayRequest)
     }
 
