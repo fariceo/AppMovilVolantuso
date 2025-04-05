@@ -2,11 +2,8 @@ package com.elrancho.cocina.compras
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.Toast
-import android.widget.TextView
+import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +15,12 @@ import com.elrancho.cocina.R
 import org.json.JSONException
 import org.json.JSONObject
 import android.util.Log
+import com.elrancho.cocina.MainActivity
+import android.content.Intent
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import android.content.Context
+
 
 class GastosActivity : AppCompatActivity() {
 
@@ -30,9 +33,9 @@ class GastosActivity : AppCompatActivity() {
     private lateinit var btnRegistrar: Button
     private val listaGastos = mutableListOf<Gasto>()
 
-    // Referencias a los TextView
     private lateinit var txtGastosEsperados: TextView
     private lateinit var txtGastosCategoria: TextView
+    private lateinit var logoImageView: ImageView  // Aquí obtenemos la referencia del ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,9 +50,11 @@ class GastosActivity : AppCompatActivity() {
         inputPrecio = findViewById(R.id.inputPrecio)
         btnRegistrar = findViewById(R.id.btnRegistrarCompra)
 
-        // Referencias a los TextView
         txtGastosEsperados = findViewById(R.id.txtGastosEsperados)
         txtGastosCategoria = findViewById(R.id.txtGastosCategoria)
+
+        // Obtener el ImageView por su ID
+        logoImageView = findViewById(R.id.logoImageView)
 
         val botonDiario: Button = findViewById(R.id.botonDiario)
         val botonSemanal: Button = findViewById(R.id.botonSemanal)
@@ -69,7 +74,17 @@ class GastosActivity : AppCompatActivity() {
         }
 
         btnRegistrar.setOnClickListener { registrarCompra() }
+
+        // Cargar los gastos diarios por defecto
         obtenerGastos("diario")
+
+        // Establecer el OnClickListener
+        logoImageView.setOnClickListener {
+            // Crear el Intent para abrir MainActivity
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)  // Iniciar MainActivity
+        }
+
     }
 
     private fun obtenerGastos(filtro: String) {
@@ -89,25 +104,45 @@ class GastosActivity : AppCompatActivity() {
 
                     for (i in 0 until response.length()) {
                         val item = response.getJSONObject(i)
-
-                        // Validar si las claves existen antes de acceder a ellas
                         val id = if (item.has("id")) item.getInt("id") else -1
                         val producto = item.optString("producto", "Desconocido")
                         val precio = item.optDouble("total", 0.0)
                         val estado = item.optInt("estado", -1)
 
-                        // Calcular los totales según el estado
-                        if (estado == 0) {
-                            totalEsperados += precio
-                        } else if (estado == 1) {
-                            totalCategoria += precio
-                        }
+                        if (estado == 0) totalEsperados += precio
+                        if (estado == 1) totalCategoria += precio
 
                         listaGastos.add(Gasto(id, producto, precio, estado))
                     }
 
                     val listaOrdenada = listaGastos.sortedWith(compareBy { it.estado }).toMutableList()
                     gastosAdapter = GastosAdapter(listaOrdenada)
+
+                    // Aquí se asigna el callback del botón de editar
+                    gastosAdapter.onEditarPrecio = { gasto ->
+                        val editText = EditText(this)
+                        editText.inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
+                        editText.setText(gasto.precio.toString())
+
+                        val dialog = AlertDialog.Builder(this)
+                            .setTitle("Editar precio de ${gasto.producto}")
+                            .setView(editText)
+                            .setPositiveButton("Guardar") { _, _ ->
+                                val nuevoPrecio = editText.text.toString().toDoubleOrNull()
+                                if (nuevoPrecio != null) {
+                                    actualizarPrecioGasto(gasto.id, nuevoPrecio)
+                                    gasto.precio = nuevoPrecio
+                                    gastosAdapter.notifyDataSetChanged()
+                                } else {
+                                    Toast.makeText(this, "Precio inválido", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                            .setNegativeButton("Cancelar", null)
+                            .create()
+
+                        dialog.show()
+                    }
+
                     recyclerView.adapter = gastosAdapter
 
                     txtGastosEsperados.text = "Gastos esperados: $${"%.2f".format(totalEsperados)}"
@@ -120,8 +155,8 @@ class GastosActivity : AppCompatActivity() {
             },
             { error ->
                 Toast.makeText(this, "Error en la conexión: ${error.message}", Toast.LENGTH_SHORT).show()
-            })
-
+            }
+        )
 
         requestQueue.add(jsonArrayRequest)
     }
@@ -138,6 +173,10 @@ class GastosActivity : AppCompatActivity() {
 
         val url = "https://elpollovolantuso.com/asi_sistema/android/registro_gasto.php"
         val requestQueue = Volley.newRequestQueue(this)
+        // Cerrar el teclado
+        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+        Toast.makeText(this, "Teclado cerrado", Toast.LENGTH_SHORT).show()
 
         val stringRequest = object : StringRequest(
             Request.Method.POST, url,
@@ -162,11 +201,44 @@ class GastosActivity : AppCompatActivity() {
                 Toast.makeText(this, "Error en la conexión: ${error.message}", Toast.LENGTH_SHORT).show()
             }) {
             override fun getParams(): MutableMap<String, String> {
-                val params = HashMap<String, String>()
-                params["producto"] = producto
-                params["cantidad"] = cantidad
-                params["precio"] = precio
-                return params
+                return hashMapOf(
+                    "producto" to producto,
+                    "cantidad" to cantidad,
+                    "precio" to precio
+                )
+            }
+        }
+
+        requestQueue.add(stringRequest)
+    }
+
+    private fun actualizarPrecioGasto(id: Int, nuevoPrecio: Double) {
+        val url = "https://elpollovolantuso.com/asi_sistema/android/registro_gasto.php"
+        val requestQueue = Volley.newRequestQueue(this)
+
+        val stringRequest = object : StringRequest(
+            Request.Method.POST, url,
+            { response ->
+                try {
+                    val jsonResponse = JSONObject(response)
+                    if (jsonResponse.getBoolean("success")) {
+                        Toast.makeText(this, "Precio actualizado correctamente", Toast.LENGTH_SHORT).show()
+                        obtenerGastos("diario")
+                    } else {
+                        Toast.makeText(this, "Error al actualizar precio", Toast.LENGTH_SHORT).show()
+                    }
+                } catch (e: JSONException) {
+                    Toast.makeText(this, "Respuesta inválida del servidor", Toast.LENGTH_SHORT).show()
+                }
+            },
+            { error ->
+                Toast.makeText(this, "Error de red: ${error.message}", Toast.LENGTH_SHORT).show()
+            }) {
+            override fun getParams(): MutableMap<String, String> {
+                return hashMapOf(
+                    "id" to id.toString(),
+                    "precio" to nuevoPrecio.toString()
+                )
             }
         }
 

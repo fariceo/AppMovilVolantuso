@@ -19,7 +19,7 @@ import com.elrancho.cocina.R
 
 class GastosAdapter(private val listaGastos: List<Gasto>) :
     RecyclerView.Adapter<GastosAdapter.GastoViewHolder>() {
-
+    var onEditarPrecio: ((Gasto) -> Unit)? = null
     class GastoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val txtProducto: TextView = view.findViewById(R.id.txtProducto)
         val txtPrecio: TextView = view.findViewById(R.id.txtPrecio)
@@ -58,6 +58,15 @@ class GastosAdapter(private val listaGastos: List<Gasto>) :
                 actualizarEstadoGasto(holder.itemView.context, gasto.id, nuevoEstado)
             }
         }
+
+        holder.txtPrecio.setOnClickListener {
+            if (gasto.estado == 0) {
+                onEditarPrecio?.invoke(gasto)
+            } else {
+                Toast.makeText(holder.itemView.context, "Este producto ya fue adquirido", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     }
 
 
