@@ -1,7 +1,6 @@
-
 package com.elrancho.cocina.ordenes
 
-data class Producto(
+data class UsuarioSaldo(
     val nombre: String,
-    val precio: Double
+    val saldo: Double
 )

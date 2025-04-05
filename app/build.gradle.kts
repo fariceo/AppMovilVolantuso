@@ -55,7 +55,8 @@ dependencies {
 
     implementation("com.google.android.material:material:1.8.0")
 
-    implementation("androidx.recyclerview:recyclerview:1.2.1")
+
+    implementation ("androidx.recyclerview:recyclerview:1.2.1")  // Verifica la última versión disponible
 
     implementation("com.squareup.okhttp3:okhttp:4.9.1")
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")

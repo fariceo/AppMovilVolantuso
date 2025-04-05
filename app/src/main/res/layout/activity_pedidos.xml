@@ -1,43 +1,103 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="16dp"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
 
+    <!-- LinearLayout horizontal para el logo y la imagen desde URL -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- Logo de la aplicación -->
+        <ImageView
+            android:id="@+id/logoImageView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="16dp"
+            android:src="@mipmap/icono_volantuso"
+            android:contentDescription="Logo"/>
+
+        <!-- Imagen cargada desde URL -->
+        <ImageView
+            android:id="@+id/imagenDesdeUrl"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:contentDescription="Imagen desde URL"/>
+
+    </LinearLayout>
+    <!-- EditText para buscar usuario -->
+    <EditText
+        android:id="@+id/editTextBuscarUsuario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Buscar Usuario"
+        android:inputType="text"
+        android:contentDescription="Campo de búsqueda de usuario" />
+
+
+    <!-- TextView para mostrar el saldo pendiente del usuario -->
+    <TextView
+        android:id="@+id/textViewSaldoPendiente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Saldo pendiente: $0.00"
+        android:textSize="16sp"
+        android:contentDescription="Campo para buscar un usuario"/>
+
+    <!-- RecyclerView para mostrar la lista de usuarios -->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewUsuarios"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <!-- EditText para buscar producto -->
     <EditText
         android:id="@+id/editTextBuscarProducto"
-        android:hint="Buscar producto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:hint="Buscar Producto"
+        android:inputType="text"
+        android:contentDescription="Campo de búsqueda de producto" />
+
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewProductos"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginTop="8dp"/>
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
+    <!-- EditText para ingresar cantidad -->
     <EditText
         android:id="@+id/editTextCantidad"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
         android:hint="Cantidad"
         android:inputType="number"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"/>
+        android:padding="12dp"
+        android:textSize="16sp"
+        android:contentDescription="Campo para ingresar cantidad de producto" />
 
+
+    <!-- TextView para mostrar el total -->
     <TextView
         android:id="@+id/textViewTotal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="Total: $0.00"
-        android:textSize="18sp"
-        android:layout_marginTop="8dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:textSize="48sp" />
 
+    <!-- Botón para confirmar el pedido -->
     <Button
         android:id="@+id/botonConfirmar"
-        android:text="Confirmar Pedido"
-        android:layout_marginTop="12dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="Confirmar Pedido" android:contentDescription="Campo para buscar un usuario"
+        />
+
 </LinearLayout>
