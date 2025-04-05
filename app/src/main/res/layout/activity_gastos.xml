@@ -3,17 +3,37 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
-
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Compras"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:paddingBottom="8dp"
-        android:background="#c0530a"
-        android:textColor="#ffffff"/>
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <!-- Logo de la aplicación -->
+        <ImageView
+            android:id="@+id/logoImageView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="16dp"
+            android:src="@mipmap/icono_volantuso"
+            android:contentDescription="Logo"/>
+
+        <!-- Título de la sección -->
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Compras"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:background="#c0530a"
+            android:textColor="#ffffff"
+            android:paddingBottom="8dp"/>
+
+    </LinearLayout>
+
+
 
     <!-- Botones -->
     <LinearLayout
