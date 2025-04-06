@@ -21,6 +21,7 @@ import android.content.Intent
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.elrancho.cocina.MainActivity
+import com.elrancho.cocina.ordenes.ListapedidosActivity
 
 
 class PedidosActivity : AppCompatActivity() {
@@ -122,7 +123,7 @@ class PedidosActivity : AppCompatActivity() {
         // Configurar el OnClickListener para la imagen desde la URL (navegar a otra actividad)
         imagenDesdeUrl.setOnClickListener {
             // Abrir una nueva actividad
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, ListapedidosActivity::class.java)
             startActivity(intent)
         }
 
