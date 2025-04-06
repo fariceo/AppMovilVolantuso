@@ -38,16 +38,16 @@ class MainActivity : AppCompatActivity() {
         // Recupera el nombre del usuario desde SharedPreferences
         val sharedPreferences = getSharedPreferences("user_session", Context.MODE_PRIVATE)
         val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
-/*
-        if (isLoggedIn) {
-            val username = sharedPreferences.getString("username", "Usuario")
-            findViewById<TextView>(R.id.usernameTextView).text = "Bienvenido, $username"
-        } else {
-            // Si no ha iniciado sesión, redirige a LoginActivity
-            startActivity(Intent(this, LoginActivity::class.java))
-           // finish()
-        }
-*/
+        /*
+                if (isLoggedIn) {
+                    val username = sharedPreferences.getString("username", "Usuario")
+                    findViewById<TextView>(R.id.usernameTextView).text = "Bienvenido, $username"
+                } else {
+                    // Si no ha iniciado sesión, redirige a LoginActivity
+                    startActivity(Intent(this, LoginActivity::class.java))
+                   // finish()
+                }
+        */
         // Botón para ir a la actividad consulta
         val buttonNavigate2: Button = findViewById(R.id.consulta)
         buttonNavigate2.setOnClickListener {

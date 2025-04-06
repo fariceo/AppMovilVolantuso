@@ -42,7 +42,7 @@ class ListapedidosActivity : AppCompatActivity() {
                         total = jsonObj.getDouble("total"),
                         usuario = jsonObj.getString("usuario"),
                         fecha = jsonObj.getString("fecha")
-                        )
+                    )
                     listaPedidos.add(pedido)
                 }
                 adapter.notifyDataSetChanged()
