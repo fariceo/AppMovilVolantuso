@@ -1,6 +1,10 @@
 package com.elrancho.cocina.ordenes
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -9,6 +13,19 @@ import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
 import com.elrancho.cocina.R
 import org.json.JSONObject
+
+import com.elrancho.cocina.ordenes.PedidosActivity
+
+
+
+/*Archivos envolucrados para el funionamiento de "ListapedidosActivity"
+* PedidosActivity.kt
+* PedidoAdapter.kt
+* Pedido.kt
+* activity_listapedidos.xml
+* item_pedido.xml
+* https://elpollovolantuso.com/asi_sistema/android/pedidos_android.php
+* */
 
 class ListapedidosActivity : AppCompatActivity() {
 
@@ -25,7 +42,21 @@ class ListapedidosActivity : AppCompatActivity() {
         adapter = PedidoAdapter(listaPedidos)
         recyclerView.adapter = adapter
 
+
+// Botón (logo) para volver a ingresar un nuevo pedido
+        val btnVolverIngresarPedido: ImageView = findViewById(R.id.logoImageView)
+
+        btnVolverIngresarPedido.setOnClickListener {
+            // Crear un Intent para iniciar la actividad PedidosActivity
+            val intent = Intent(this@ListapedidosActivity, PedidosActivity::class.java)
+            startActivity(intent)
+        }
+
+
+
         obtenerPedidos()
+
+
     }
 
     private fun obtenerPedidos() {

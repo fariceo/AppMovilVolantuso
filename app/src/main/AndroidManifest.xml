@@ -20,8 +20,12 @@
             android:name=".ordenes.ListapedidosActivity"
             android:exported="false" />
         <activity
+
             android:name=".ordenes.PedidosActivity"
             android:exported="false" />
+        <activity android:name=".ordenes.ver_pedidos.VerPedidosActivity"></activity>
+
+
         <activity
             android:name=".compras.GastosActivity"
             android:exported="false" />

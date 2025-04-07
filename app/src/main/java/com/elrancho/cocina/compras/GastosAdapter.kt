@@ -17,7 +17,7 @@ import android.util.Log
 
 import com.elrancho.cocina.R
 
-class GastosAdapter(private val listaGastos: List<Gasto>) :
+class GastosAdapter(private val listaGastos: MutableList<Gasto>) :
     RecyclerView.Adapter<GastosAdapter.GastoViewHolder>() {
     var onEditarPrecio: ((Gasto) -> Unit)? = null
     class GastoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -77,43 +77,53 @@ class GastosAdapter(private val listaGastos: List<Gasto>) :
         // Se ordenan primero los elementos con estado 0
         listaGastos.sortedWith(compareBy { it.estado })
     }
-}
-fun actualizarEstadoGasto(context: Context, id: Int, estado: Int) {
-    Log.d("ActualizarEstado", "Enviando ID: $id, Estado: $estado") // Verificar datos antes de enviar
-
-    val url = "https://elpollovolantuso.com/asi_sistema/android/actualizar_estado_gasto.php"
-    val requestQueue = Volley.newRequestQueue(context)
-
-    val stringRequest = object : StringRequest(
-        Request.Method.POST, url,
-        { response ->
-            Log.d("ActualizarEstado", "Respuesta del servidor: $response") // Verificar respuesta del servidor
-
-            try {
-                val jsonResponse = JSONObject(response)
-                val success = jsonResponse.getBoolean("success")
-
-                if (!success) {
-                    Toast.makeText(context, "Error al actualizar estado", Toast.LENGTH_SHORT).show()
-                }
-            } catch (e: JSONException) {
-                Log.e("ActualizarEstado", "Error JSON: ${e.message}")
-                Toast.makeText(context, "Error en la respuesta del servidor", Toast.LENGTH_SHORT).show()
-            }
-        },
-        { error ->
-            Log.e("ActualizarEstado", "Error de conexión: ${error.message}")
-            Toast.makeText(context, "Error de conexión", Toast.LENGTH_SHORT).show()
-        }) {
-        override fun getParams(): MutableMap<String, String> {
-            val params = hashMapOf(
-                "id" to id.toString(),
-                "estado" to estado.toString()
-            )
-            Log.d("ActualizarEstado", "Parámetros enviados: $params") // Verificar datos enviados
-            return params
-        }
+    /*fun actualizarLista(nuevaLista: List<Gasto>) {
+        listaGastos = nuevaLista.toMutableList()
+        notifyDataSetChanged()
     }
 
-    requestQueue.add(stringRequest)
+    fun sortGastos() {
+        listaGastos.sortBy { it.estado }
+        notifyDataSetChanged()
+    }
+*/
+    fun actualizarEstadoGasto(context: Context, id: Int, estado: Int) {
+        Log.d("ActualizarEstado", "Enviando ID: $id, Estado: $estado") // Verificar datos antes de enviar
+
+        val url = "https://elpollovolantuso.com/asi_sistema/android/actualizar_estado_gasto.php"
+        val requestQueue = Volley.newRequestQueue(context)
+
+        val stringRequest = object : StringRequest(
+            Request.Method.POST, url,
+            { response ->
+                Log.d("ActualizarEstado", "Respuesta del servidor: $response") // Verificar respuesta del servidor
+
+                try {
+                    val jsonResponse = JSONObject(response)
+                    val success = jsonResponse.getBoolean("success")
+
+                    if (!success) {
+                        Toast.makeText(context, "Error al actualizar estado", Toast.LENGTH_SHORT).show()
+                    }
+                } catch (e: JSONException) {
+                    Log.e("ActualizarEstado", "Error JSON: ${e.message}")
+                    Toast.makeText(context, "Error en la respuesta del servidor", Toast.LENGTH_SHORT).show()
+                }
+            },
+            { error ->
+                Log.e("ActualizarEstado", "Error de conexión: ${error.message}")
+                Toast.makeText(context, "Error de conexión", Toast.LENGTH_SHORT).show()
+            }) {
+            override fun getParams(): MutableMap<String, String> {
+                val params = hashMapOf(
+                    "id" to id.toString(),
+                    "estado" to estado.toString()
+                )
+                Log.d("ActualizarEstado", "Parámetros enviados: $params") // Verificar datos enviados
+                return params
+            }
+        }
+
+        requestQueue.add(stringRequest)
+    }
 }

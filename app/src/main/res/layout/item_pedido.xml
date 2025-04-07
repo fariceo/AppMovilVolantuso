@@ -13,13 +13,14 @@
         android:padding="12dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <TextView android:id="@+id/txtUsuario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textSize="16sp" />
-        <TextView android:id="@+id/txtProducto"
 
+        <TextView android:id="@+id/txtProducto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

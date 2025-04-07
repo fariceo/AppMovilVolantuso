@@ -22,6 +22,7 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.elrancho.cocina.MainActivity
 import com.elrancho.cocina.ordenes.ListapedidosActivity
+import com.elrancho.cocina.ordenes.ver_pedidos.VerPedidosActivity
 
 
 class PedidosActivity : AppCompatActivity() {
@@ -60,6 +61,13 @@ class PedidosActivity : AppCompatActivity() {
 
         logoImageView = findViewById(R.id.logoImageView)
         imagenDesdeUrl = findViewById(R.id.imagenDesdeUrl)
+
+
+        // Encontrar el botón por su ID
+        val botonVerPedidos: Button = findViewById(R.id.botonVerPedidos)
+
+
+        val btnVolverIngresarPedido: ImageView = findViewById(R.id.logoImageView)
         // Buscar productos al escribir
         buscarEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
@@ -107,10 +115,10 @@ class PedidosActivity : AppCompatActivity() {
             registrarPedido()
         }
 
-        // Configurar el OnClickListener para el logo
-        logoImageView.setOnClickListener {
-            // Regresar a MainActivity
-            finish() // Esto cierra la actividad actual y regresa a la anterior
+        btnVolverIngresarPedido.setOnClickListener {
+            // Crear un Intent para ir a MainActivity
+            val intent = Intent(this@PedidosActivity, MainActivity::class.java)
+            startActivity(intent)
         }
 
         // Cargar la imagen desde una URL usando Glide
@@ -124,6 +132,13 @@ class PedidosActivity : AppCompatActivity() {
         imagenDesdeUrl.setOnClickListener {
             // Abrir una nueva actividad
             val intent = Intent(this, ListapedidosActivity::class.java)
+            startActivity(intent)
+        }
+
+        // Configurar el OnClickListener para el botón
+        botonVerPedidos.setOnClickListener {
+            // Crear un Intent para navegar a VerPedidosActivity
+            val intent = Intent(this@PedidosActivity, VerPedidosActivity::class.java)
             startActivity(intent)
         }
 

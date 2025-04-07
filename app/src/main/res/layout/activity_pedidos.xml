@@ -23,6 +23,12 @@
                 android:layout_marginEnd="16dp"
                 android:src="@mipmap/icono_volantuso"
                 android:contentDescription="Logo" />
+            <Button
+                android:id="@+id/botonVerPedidos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ver Pedidos" />
+
 
             <ImageView
                 android:id="@+id/imagenDesdeUrl"
