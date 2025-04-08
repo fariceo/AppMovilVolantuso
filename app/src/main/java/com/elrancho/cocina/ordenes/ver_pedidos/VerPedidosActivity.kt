@@ -10,20 +10,6 @@ import com.android.volley.toolbox.Volley
 import com.elrancho.cocina.R
 import org.json.JSONObject
 
-/*
-* Archivos esccenciales para el funcionamiento de "VerPedidosActivity"
-* ----folder Ver_pedidos----
-*VerPedidosActivity.kt
-* PedidoAgrupadoAdapter.kt
-* PedidoAgrupado.kt
-* DetalleProducto.kt
-*
-* ---Folder Res/layout
-* item_pedido_agrupado.xml
-* item_detalle_producto.xml
-* activity_ver_pedidos.xml
-* pedidos_agrupados.php
-* */
 class VerPedidosActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
@@ -58,7 +44,9 @@ class VerPedidosActivity : AppCompatActivity() {
                             cantidad = p.getInt("cantidad"),
                             precio = p.getDouble("precio"),
                             total = p.getDouble("total"),
-                            fecha = p.getString("fecha")
+                            fecha = p.getString("fecha"),
+                            delivery_type = p.getString("delivery"),
+                            delivery_cost = p.getDouble("delivery_cost")
                         )
                         listaProductos.add(producto)
                     }

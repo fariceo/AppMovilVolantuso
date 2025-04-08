@@ -6,42 +6,63 @@
     android:orientation="vertical"
     android:background="#F5F5F5"
     android:layout_marginBottom="6dp"
-    android:layout_marginTop="2dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
-    android:elevation="1dp">
+    android:layout_marginTop="6dp">
 
     <TextView
         android:id="@+id/txtNombreProducto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Producto"
-        android:textStyle="bold"
-        android:textColor="#333333"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/txtCantidad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cantidad"
-        android:textSize="14sp"
-        android:textColor="#666666" />
+        android:text="Cantidad: 1"
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/txtPrecio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Precio"
-        android:textSize="14sp"
-        android:textColor="#666666" />
+        android:text="Precio: $5.0"
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/txtSubtotal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Subtotal"
+        android:text="Subtotal: $5.0"
         android:textSize="14sp"
-        android:textColor="#666666" />
+        android:textColor="#FF6347" />
 
+    <RadioGroup
+        android:id="@+id/radioGroupDelivery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radioDelivery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delivery"
+            android:textSize="12sp" />
+
+        <RadioButton
+            android:id="@+id/radioTakeout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Takeout"
+            android:textSize="12sp" />
+
+        <RadioButton
+            android:id="@+id/radioDefault"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Default"
+            android:textSize="12sp" />
+    </RadioGroup>
 </LinearLayout>
