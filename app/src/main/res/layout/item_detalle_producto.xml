@@ -44,12 +44,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <RadioButton
-            android:id="@+id/radioDelivery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Delivery"
-            android:textSize="12sp" />
+
 
         <RadioButton
             android:id="@+id/radioTakeout"
@@ -62,7 +57,9 @@
             android:id="@+id/radioDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Default"
+            android:text="Local"
             android:textSize="12sp" />
     </RadioGroup>
+
+
 </LinearLayout>

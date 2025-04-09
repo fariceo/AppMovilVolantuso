@@ -1,13 +1,16 @@
-package com.elrancho.cocina.ordenes.ver_pedidos
-
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.CheckBox
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.elrancho.cocina.R
+import com.elrancho.cocina.ordenes.ver_pedidos.PedidoAgrupado
 
 class PedidoAgrupadoAdapter(private val listaPedidos: List<PedidoAgrupado>) :
     RecyclerView.Adapter<PedidoAgrupadoAdapter.PedidoViewHolder>() {
@@ -22,37 +25,35 @@ class PedidoAgrupadoAdapter(private val listaPedidos: List<PedidoAgrupado>) :
         val pedido = listaPedidos[position]
         holder.txtUsuario.text = pedido.usuario
         holder.txtFecha.text = pedido.fecha
-        holder.txtTotal.text = "Total: $${pedido.total}"
 
-        // Limpiar los productos previos antes de agregar nuevos
+        // Actualizar total con los costos de delivery
+        actualizarTotal(pedido, holder)
+
         holder.layoutProductos.removeAllViews()
 
+        var totalDelivery = 0.0 // Variable para calcular el costo total de delivery
+        var checkBoxSelected = false // Variable para verificar si el CheckBox está seleccionado
+
+        // Añadir productos
         for (producto in pedido.productos) {
-            // Inflar el layout para un solo producto
             val productoView = LayoutInflater.from(holder.itemView.context)
                 .inflate(R.layout.item_detalle_producto, holder.layoutProductos, false)
 
-            // Obtener las vistas dentro de cada producto
             val txtNombre = productoView.findViewById<TextView>(R.id.txtNombreProducto)
             val txtCantidad = productoView.findViewById<TextView>(R.id.txtCantidad)
             val txtPrecio = productoView.findViewById<TextView>(R.id.txtPrecio)
             val txtSubTotal = productoView.findViewById<TextView>(R.id.txtSubtotal)
             val radioGroup = productoView.findViewById<RadioGroup>(R.id.radioGroupDelivery)
-            val radioDelivery = productoView.findViewById<RadioButton>(R.id.radioDelivery)
             val radioTakeout = productoView.findViewById<RadioButton>(R.id.radioTakeout)
             val radioDefault = productoView.findViewById<RadioButton>(R.id.radioDefault)
 
-            // Asignar los datos del producto
             txtNombre.text = producto.producto
             txtCantidad.text = "Cantidad: ${producto.cantidad}"
             txtPrecio.text = "Precio: $${producto.precio}"
-            txtSubTotal.text = "Subtotal: $${producto.total}"
+            txtSubTotal.text = "Subtotal: $${"%.2f".format(producto.total + producto.delivery_cost)}"
 
-            // Configurar los radio buttons según el tipo de delivery
+            // Configurar RadioButtons según el tipo de delivery
             when (producto.delivery_type) {
-                "delivery" -> {
-                    radioDelivery.isChecked = true
-                }
                 "takeout" -> {
                     radioTakeout.isChecked = true
                 }
@@ -61,34 +62,56 @@ class PedidoAgrupadoAdapter(private val listaPedidos: List<PedidoAgrupado>) :
                 }
             }
 
-            // Cambiar el costo de delivery cuando el usuario seleccione una opción
+            // Actualizar costo de delivery cuando se cambia la opción
             radioGroup.setOnCheckedChangeListener { _, checkedId ->
                 when (checkedId) {
-                    R.id.radioDelivery -> {
-                        producto.delivery_cost = 2.5
-                    }
                     R.id.radioTakeout -> {
-                        producto.delivery_cost = 0.25 * producto.cantidad
+                        producto.delivery_cost = 0.25 * producto.cantidad // Opción "para llevar"
                     }
                     R.id.radioDefault -> {
-                        producto.delivery_cost = 0.0
+                        producto.delivery_cost = 0.0 // Opción "delivery"
                     }
                 }
 
-                // Actualizar el total después de cambiar el costo de delivery
-                val nuevoTotal = producto.total + producto.delivery_cost
-                txtSubTotal.text = "Subtotal: $${nuevoTotal}"
+                // Actualizar el subtotal individual con delivery
+                txtSubTotal.text = "Subtotal: $${"%.2f".format(producto.total + producto.delivery_cost)}"
 
-                // También actualizar el total del pedido en el ViewHolder
-                holder.txtTotal.text = "Total: $${nuevoTotal}"
+                // Actualizar el total general del pedido
+                actualizarTotal(pedido, holder)
             }
 
-            // Agregar la vista inflada del producto al layoutProductos
             holder.layoutProductos.addView(productoView)
+        }
+
+        // CheckBox para seleccionar delivery (solo aparece al final)
+        val checkBoxDelivery = holder.itemView.findViewById<CheckBox>(R.id.checkBoxSelectDelivery)
+
+        // Verificar si el CheckBox está seleccionado
+        checkBoxDelivery.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                checkBoxSelected = true
+            } else {
+                checkBoxSelected = false
+            }
+
+            // Actualizar el total con el costo de delivery adicional
+            actualizarTotal(pedido, holder, checkBoxSelected)
         }
     }
 
     override fun getItemCount(): Int = listaPedidos.size
+
+    // Función para actualizar el total del pedido
+    private fun actualizarTotal(pedido: PedidoAgrupado, holder: PedidoViewHolder, applyDelivery: Boolean = false) {
+        var totalConDelivery = pedido.productos.sumOf { it.total + it.delivery_cost }
+
+        // Si el CheckBox está seleccionado, añadir $2.5 al total
+        if (applyDelivery) {
+            totalConDelivery += 2.5
+        }
+
+        holder.txtTotal.text = "Total: $${"%.2f".format(totalConDelivery)}"
+    }
 
     class PedidoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val txtUsuario: TextView = itemView.findViewById(R.id.txtUsuario)

@@ -1,5 +1,6 @@
 package com.elrancho.cocina.ordenes.ver_pedidos
 
+import PedidoAgrupadoAdapter
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -8,7 +9,6 @@ import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
 import com.elrancho.cocina.R
-import org.json.JSONObject
 
 class VerPedidosActivity : AppCompatActivity() {
 
