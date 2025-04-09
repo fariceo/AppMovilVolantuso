@@ -1,7 +1,7 @@
 package com.elrancho.cocina.ordenes.ver_pedidos
 
-import PedidoAgrupadoAdapter
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -10,7 +10,7 @@ import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
 import com.elrancho.cocina.R
 
-class VerPedidosActivity : AppCompatActivity() {
+class VerPedidosActivity : AppCompatActivity(), PedidoAgrupadoAdapter.OnFiadoClickListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: PedidoAgrupadoAdapter
@@ -60,10 +60,37 @@ class VerPedidosActivity : AppCompatActivity() {
                     listaAgrupada.add(pedido)
                 }
 
-                adapter = PedidoAgrupadoAdapter(listaAgrupada)
+                adapter = PedidoAgrupadoAdapter(listaAgrupada, this) // Pasa el listener
                 recyclerView.adapter = adapter
             },
             { error -> error.printStackTrace() })
+
+        Volley.newRequestQueue(this).add(request)
+    }
+
+    // Implementación del método de la interfaz
+    override fun onAgregarFiado(saldo: Double, usuario: String) {
+        actualizarSaldoFiadoEnServidor(saldo, usuario)
+    }
+
+    private fun actualizarSaldoFiadoEnServidor(saldo: Double, usuario: String) {
+        val url = "https://elpollovolantuso.com/asi_sistema/android/actualizar_saldo.php"
+
+        val request = object : com.android.volley.toolbox.StringRequest(Method.POST, url,
+            { response ->
+                Toast.makeText(this, "Saldo fiado agregado correctamente", Toast.LENGTH_SHORT).show()
+            },
+            { error ->
+                Toast.makeText(this, "Error al agregar saldo: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        ) {
+            override fun getParams(): Map<String, String> {
+                return mapOf(
+                    "usuario" to usuario,
+                    "saldo" to saldo.toString()
+                )
+            }
+        }
 
         Volley.newRequestQueue(this).add(request)
     }

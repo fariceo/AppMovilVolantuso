@@ -1,19 +1,23 @@
-import android.content.Context
+package com.elrancho.cocina.ordenes.ver_pedidos
+
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.elrancho.cocina.R
-import com.elrancho.cocina.ordenes.ver_pedidos.PedidoAgrupado
 
-class PedidoAgrupadoAdapter(private val listaPedidos: List<PedidoAgrupado>) :
-    RecyclerView.Adapter<PedidoAgrupadoAdapter.PedidoViewHolder>() {
+class PedidoAgrupadoAdapter(
+    private val listaPedidos: List<PedidoAgrupado>,
+    private val onFiadoClickListener: OnFiadoClickListener // Pasar el listener
+) : RecyclerView.Adapter<PedidoAgrupadoAdapter.PedidoViewHolder>() {
+
+    // Interfaz para manejar el click en el botón fiado
+    interface OnFiadoClickListener {
+        fun onAgregarFiado(saldo: Double, usuario: String)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PedidoViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -97,6 +101,30 @@ class PedidoAgrupadoAdapter(private val listaPedidos: List<PedidoAgrupado>) :
             // Actualizar el total con el costo de delivery adicional
             actualizarTotal(pedido, holder, checkBoxSelected)
         }
+
+        // Aquí solo declaramos el botón una vez
+        val buttonFiado = holder.itemView.findViewById<Button>(R.id.buttonFiado)
+        buttonFiado.setOnClickListener {
+            val context = holder.itemView.context
+            val input = EditText(context)
+            input.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+
+            AlertDialog.Builder(context)
+                .setTitle("Agregar saldo fiado")
+                .setView(input)
+                .setPositiveButton("Aceptar") { dialog, _ ->
+                    val valorIngresado = input.text.toString().toDoubleOrNull()
+                    if (valorIngresado != null) {
+                        onFiadoClickListener.onAgregarFiado(valorIngresado, pedido.usuario) // Llamar al listener
+                    } else {
+                        Toast.makeText(context, "Ingrese un número válido", Toast.LENGTH_SHORT).show()
+                    }
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Cancelar") { dialog, _ -> dialog.dismiss() }
+                .show()
+        }
+
     }
 
     override fun getItemCount(): Int = listaPedidos.size
