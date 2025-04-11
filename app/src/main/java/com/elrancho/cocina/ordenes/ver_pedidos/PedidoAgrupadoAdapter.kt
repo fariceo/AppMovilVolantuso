@@ -109,8 +109,11 @@ class PedidoAgrupadoAdapter(
             val input = EditText(context)
             input.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
 
+            // Usamos el nombre del usuario del pedido
+            val usuario = pedido.usuario
+
             AlertDialog.Builder(context)
-                .setTitle("Agregar saldo fiado")
+                .setTitle("Agregar saldo fiado a $usuario")
                 .setView(input)
                 .setPositiveButton("Aceptar") { dialog, _ ->
                     val valorIngresado = input.text.toString().toDoubleOrNull()

@@ -74,20 +74,31 @@ class VerPedidosActivity : AppCompatActivity(), PedidoAgrupadoAdapter.OnFiadoCli
     }
 
     private fun actualizarSaldoFiadoEnServidor(saldo: Double, usuario: String) {
-        val url = "https://elpollovolantuso.com/asi_sistema/android/actualizar_saldo.php"
+        val url = "https://elpollovolantuso.com/asi_sistema/android/actualizar_saldo_pendiente.php"
+
+        // Obtener la fecha y hora actuales
+        val fechaActual = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(java.util.Date())
+        val horaActual = java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date())
 
         val request = object : com.android.volley.toolbox.StringRequest(Method.POST, url,
             { response ->
-                Toast.makeText(this, "Saldo fiado agregado correctamente", Toast.LENGTH_SHORT).show()
+                if (response.trim() == "success") {
+                    Toast.makeText(this, "Saldo fiado agregado correctamente", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Error desde el servidor: $response", Toast.LENGTH_LONG).show()
+                }
             },
             { error ->
-                Toast.makeText(this, "Error al agregar saldo: ${error.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Error al agregar saldo: ${error.localizedMessage ?: "Error desconocido"}", Toast.LENGTH_LONG).show()
             }
         ) {
             override fun getParams(): Map<String, String> {
                 return mapOf(
                     "usuario" to usuario,
-                    "saldo" to saldo.toString()
+                    "saldo" to saldo.toString(),
+                    "accion" to "1",
+                    "fecha" to fechaActual,
+                    "hora" to horaActual
                 )
             }
         }
