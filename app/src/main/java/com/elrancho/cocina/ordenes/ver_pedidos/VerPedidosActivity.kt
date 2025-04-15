@@ -27,7 +27,9 @@ class VerPedidosActivity : AppCompatActivity(), PedidoAgrupadoAdapter.OnFiadoCli
     }
 
     private fun obtenerPedidosAgrupados() {
-        val url = "https://elpollovolantuso.com/asi_sistema/android/pedidos_agrupados.php"
+        //val url = "https://elpollovolantuso.com/asi_sistema/android/pedidos_agrupados.php"
+        val url = "http://35.223.94.102/asi_sistema/android/pedidos_agrupados.php"
+
         val request = JsonArrayRequest(Request.Method.GET, url, null,
             { response ->
                 listaAgrupada.clear()
@@ -74,7 +76,8 @@ class VerPedidosActivity : AppCompatActivity(), PedidoAgrupadoAdapter.OnFiadoCli
     }
 
     private fun actualizarSaldoFiadoEnServidor(saldo: Double, usuario: String) {
-        val url = "https://elpollovolantuso.com/asi_sistema/android/actualizar_saldo_pendiente.php"
+        //val url = "https://elpollovolantuso.com/asi_sistema/android/actualizar_saldo_pendiente.php"
+        val url = "http://35.223.94.102/asi_sistema/android/actualizar_saldo_pendiente.php"
 
         // Obtener la fecha y hora actuales
         val fechaActual = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(java.util.Date())
@@ -105,4 +108,36 @@ class VerPedidosActivity : AppCompatActivity(), PedidoAgrupadoAdapter.OnFiadoCli
 
         Volley.newRequestQueue(this).add(request)
     }
+
+
+    override fun onPedidoListo(usuario: String, total: Double,delivery_type: String) {
+        //val url = "https://elpollovolantuso.com/asi_sistema/android/pedidos_listo.php"
+        val url = "http://35.223.94.102/asi_sistema/android/pedidos_listo.php"
+
+        val request = object : com.android.volley.toolbox.StringRequest(Method.POST, url,
+            { response ->
+                if (response.trim() == "success") {
+                    Toast.makeText(this, "Pedido de $usuario marcado como listo", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Error al marcar pedido como listo: $response", Toast.LENGTH_SHORT).show()
+                }
+            },
+            { error ->
+                Toast.makeText(this, "Error en la solicitud: ${error.localizedMessage}", Toast.LENGTH_LONG).show()
+            }
+        ) {
+            override fun getParams(): Map<String, String> {
+                return mapOf(
+                    "usuario" to usuario,
+                    "total" to total.toString(),
+                    "delivery" to delivery_type
+
+                )
+
+            }
+        }
+
+        Volley.newRequestQueue(this).add(request)
+    }
+
 }

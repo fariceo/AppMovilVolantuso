@@ -17,6 +17,8 @@ class PedidoAgrupadoAdapter(
     // Interfaz para manejar el click en el botón fiado
     interface OnFiadoClickListener {
         fun onAgregarFiado(saldo: Double, usuario: String)
+
+        fun onPedidoListo(usuario: String, total: Double, delivery_type: String)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PedidoViewHolder {
@@ -127,6 +129,19 @@ class PedidoAgrupadoAdapter(
                 .setNegativeButton("Cancelar") { dialog, _ -> dialog.dismiss() }
                 .show()
         }
+
+        val btnPedidoListo = holder.itemView.findViewById<Button>(R.id.listo)
+        btnPedidoListo.setOnClickListener {
+            val totalText = holder.txtTotal.text.toString().replace("Total: $", "")
+            val total = totalText.toDoubleOrNull() ?: 0.0
+
+            val deliveryType = if (checkBoxSelected) "delivery" else "takeout"
+            //val metodoPago = if (pedido.esFiado) "fiado" else "efectivo"
+
+            onFiadoClickListener.onPedidoListo(pedido.usuario, total, deliveryType)
+        }
+
+
 
     }
 
