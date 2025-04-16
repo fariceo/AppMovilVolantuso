@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.elrancho.cocina.R
 
 class PedidoAgrupadoAdapter(
-    private val listaPedidos: List<PedidoAgrupado>,
-    private val onFiadoClickListener: OnFiadoClickListener // Pasar el listener
+    private val listaPedidos: MutableList<PedidoAgrupado>,
+    private val listener: OnFiadoClickListener
 ) : RecyclerView.Adapter<PedidoAgrupadoAdapter.PedidoViewHolder>() {
 
     // Interfaz para manejar el click en el botón fiado
@@ -22,6 +22,7 @@ class PedidoAgrupadoAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PedidoViewHolder {
+
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_pedido_agrupado, parent, false)
         return PedidoViewHolder(view)
@@ -120,8 +121,8 @@ class PedidoAgrupadoAdapter(
                 .setPositiveButton("Aceptar") { dialog, _ ->
                     val valorIngresado = input.text.toString().toDoubleOrNull()
                     if (valorIngresado != null) {
-                        onFiadoClickListener.onAgregarFiado(valorIngresado, pedido.usuario) // Llamar al listener
-                    } else {
+                       listener.onAgregarFiado(valorIngresado, pedido.usuario) // Llamar al listener
+                        } else {
                         Toast.makeText(context, "Ingrese un número válido", Toast.LENGTH_SHORT).show()
                     }
                     dialog.dismiss()
@@ -131,15 +132,26 @@ class PedidoAgrupadoAdapter(
         }
 
         val btnPedidoListo = holder.itemView.findViewById<Button>(R.id.listo)
+
         btnPedidoListo.setOnClickListener {
             val totalText = holder.txtTotal.text.toString().replace("Total: $", "")
             val total = totalText.toDoubleOrNull() ?: 0.0
 
             val deliveryType = if (checkBoxSelected) "delivery" else "takeout"
-            //val metodoPago = if (pedido.esFiado) "fiado" else "efectivo"
 
-            onFiadoClickListener.onPedidoListo(pedido.usuario, total, deliveryType)
+            // Animación de desvanecimiento y deslizamiento
+            holder.itemView.animate()
+                .alpha(0f)
+                .translationX(holder.itemView.width.toFloat())
+                .setDuration(500)
+                .withEndAction {
+                    listener.onPedidoListo(pedido.usuario, total, deliveryType)
+                    eliminarPedidoPorUsuario(pedido.usuario)
+                }
+                .start()
         }
+
+
 
 
 
@@ -158,7 +170,14 @@ class PedidoAgrupadoAdapter(
 
         holder.txtTotal.text = "Total: $${"%.2f".format(totalConDelivery)}"
     }
-
+    // ✅ FUNCIÓN QUE ACTUALIZA EL RECYCLER VIEW
+    fun eliminarPedidoPorUsuario(usuario: String) {
+        val index = listaPedidos.indexOfFirst { it.usuario == usuario }
+        if (index != -1) {
+            listaPedidos.removeAt(index)
+            notifyItemRemoved(index)
+        }
+    }
     class PedidoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val txtUsuario: TextView = itemView.findViewById(R.id.txtUsuario)
         val txtFecha: TextView = itemView.findViewById(R.id.txtFecha)

@@ -117,6 +117,9 @@ class VerPedidosActivity : AppCompatActivity(), PedidoAgrupadoAdapter.OnFiadoCli
         val request = object : com.android.volley.toolbox.StringRequest(Method.POST, url,
             { response ->
                 if (response.trim() == "success") {
+                    // ACTUALIZAR EL RECYCLER VIEW
+                    // 👉 Aquí llamas a la función del adaptador para eliminar el pedido
+                    adapter.eliminarPedidoPorUsuario(usuario)
                     Toast.makeText(this, "Pedido de $usuario marcado como listo", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "Error al marcar pedido como listo: $response", Toast.LENGTH_SHORT).show()
