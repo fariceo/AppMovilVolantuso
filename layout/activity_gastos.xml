@@ -1,0 +1,133 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <!-- Logo de la aplicación -->
+        <ImageView
+            android:id="@+id/logoImageView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="16dp"
+            android:src="@mipmap/icono_volantuso"
+            android:contentDescription="Logo"/>
+
+        <!-- Título de la sección -->
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Compras"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:background="#e0da07"
+            android:textColor="#001969"
+            android:paddingBottom="8dp"/>
+
+    </LinearLayout>
+
+
+
+    <!-- Botones -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="16dp">
+
+        <Button
+            android:id="@+id/botonDiario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Diario"
+            android:layout_margin="8dp"
+            android:backgroundTint="#6f911b"/>
+
+        <Button
+            android:id="@+id/botonSemanal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Semanal"
+            android:layout_margin="8dp"
+            android:backgroundTint="#6f911b"/>
+
+        <Button
+            android:id="@+id/botonMensual"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mensual"
+            android:layout_margin="8dp"
+            android:backgroundTint="#6f911b"/>
+    </LinearLayout>
+    <!-- TextView para mostrar el total de gastos esperados -->
+    <TextView
+        android:id="@+id/txtGastosEsperados"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gastos esperados: $0"
+        android:textSize="18sp"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- TextView para mostrar el total de gastos según la categoría (diario, semanal o mensual) -->
+    <TextView
+        android:id="@+id/txtGastosCategoria"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gastos Diario: $0"
+        android:textSize="18sp"/>
+
+    <!-- RecyclerView para mostrar los gastos -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerGastos"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Formulario para agregar un nuevo gasto -->
+    <LinearLayout
+        android:id="@+id/formularioRegistro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/inputProducto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Producto"
+            />
+
+        <EditText
+            android:id="@+id/inputCantidad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Cantidad"
+            />
+
+        <EditText
+            android:id="@+id/inputPrecio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Precio"
+
+            />
+
+        <Button
+            android:id="@+id/btnRegistrarCompra"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registrar Compra"
+            android:backgroundTint="#132632"
+            android:layout_gravity="center"
+            android:padding="10dp"/>
+    </LinearLayout>
+</LinearLayout>

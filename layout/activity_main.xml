@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/usuario"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Usuario"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/producto"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Producto"
+        app:layout_constraintTop_toBottomOf="@id/usuario"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/iralogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ir a Login"
+        app:layout_constraintTop_toBottomOf="@id/producto"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="12dp"/>
+
+    <!-- Alinear los botones horizontalmente -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/iralogin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp">
+
+        <ImageButton
+            android:id="@+id/carta"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:contentDescription="Ingresar Orden"
+            android:background="@android:color/transparent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="8dp"/>
+
+        <ImageButton
+            android:id="@+id/btnIngresarOrden"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:contentDescription="Ingresar Orden"
+            android:background="@android:color/transparent"
+            app:layout_constraintStart_toEndOf="@id/carta"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="8dp"/>
+
+        <ImageButton
+            android:id="@+id/btnVerGastos"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:contentDescription="Ver Gastos"
+            android:background="@android:color/transparent"
+            app:layout_constraintStart_toEndOf="@id/btnIngresarOrden"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="8dp"/>
+
+        <ImageButton
+            android:id="@+id/btnSaldoPendiente"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:contentDescription="Saldo Pendiente"
+            android:background="@android:color/transparent"
+            app:layout_constraintStart_toEndOf="@id/btnVerGastos"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="8dp"/>
+
+        <ImageButton
+            android:id="@+id/consulta"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:contentDescription="Consulta Ventas"
+            android:background="@android:color/transparent"
+            app:layout_constraintStart_toEndOf="@id/btnSaldoPendiente"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
