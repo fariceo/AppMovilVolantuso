@@ -47,6 +47,11 @@
         <activity
             android:name=".consultaMysql.consulta"
             android:exported="true" />
+        <activity android:name=".deudas.PagosActivity">
+            <!-- Opcionalmente, puedes agregar un intent-filter si esta actividad es la principal -->
+        </activity>
     </application>
+
+
 
 </manifest>
