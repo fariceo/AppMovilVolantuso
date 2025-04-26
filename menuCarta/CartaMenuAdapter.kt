@@ -9,18 +9,22 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.elrancho.cocina.R
-import android.widget.Toast
-import android.content.Context
 
+class CartaMenuAdapter(
+    private val productos: List<ProductoCarta>,
+    private val listener: CartaMenuAdapterListener
+) : RecyclerView.Adapter<CartaMenuAdapter.CartaMenuViewHolder>() {
 
-class CartaMenuAdapter(private val productos: List<ProductoCarta>) :
-    RecyclerView.Adapter<CartaMenuAdapter.CartaMenuViewHolder>() {
+    interface CartaMenuAdapterListener {
+        /** Cuando el user pulsa “Agregar” */
+        fun mostrarDialogoCantidad(producto: ProductoCarta)
+    }
 
-    class CartaMenuViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class CartaMenuViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imagenProducto: ImageView = itemView.findViewById(R.id.imagenProducto)
-        val tvProducto: TextView = itemView.findViewById(R.id.tvcartaProducto)
-        val tvPrecio: TextView = itemView.findViewById(R.id.tvcartaPrecio)
-        val btnAgregar: Button = itemView.findViewById(R.id.agregar_producto)
+        val tvProducto: TextView    = itemView.findViewById(R.id.tvcartaProducto)
+        val tvPrecio: TextView      = itemView.findViewById(R.id.tvcartaPrecio)
+        val btnAgregar: Button      = itemView.findViewById(R.id.agregar_producto)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartaMenuViewHolder {
@@ -32,20 +36,17 @@ class CartaMenuAdapter(private val productos: List<ProductoCarta>) :
     override fun onBindViewHolder(holder: CartaMenuViewHolder, position: Int) {
         val producto = productos[position]
         holder.tvProducto.text = producto.producto
-        holder.tvPrecio.text = "S/ ${producto.precio}"
+        holder.tvPrecio.text   = "S/ ${producto.precio}"
 
-        // Cargar imagen desde URL usando Glide
         Glide.with(holder.itemView.context)
             .load(producto.imagenUrl)
-            .placeholder(R.drawable.ic_launcher_background) // Coloca una imagen temporal
-            .error(R.drawable.ic_launcher_background)  // O cualquier otro recurso que ya exista
-            // Imagen si hay error
+            .placeholder(R.drawable.ic_launcher_background)
+            .error(R.drawable.ic_launcher_background)
             .into(holder.imagenProducto)
 
         holder.btnAgregar.setOnClickListener {
-            // Puedes hacer algo como mostrar un Toast
-            val context = holder.itemView.context
-            Toast.makeText(context, "Agregado: ${producto.producto}", Toast.LENGTH_SHORT).show()
+            // aquí solo delegamos a la Activity
+            listener.mostrarDialogoCantidad(producto)
         }
     }
 

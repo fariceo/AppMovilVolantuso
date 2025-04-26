@@ -5,5 +5,6 @@ package com.elrancho.cocina.menuCarta
 data class ProductoCarta(
     val producto: String,
     val precio: Double,
-    val imagenUrl: String // ← nueva propiedad
+    val imagenUrl: String// ← nueva propiedad
+
 )/*carta_menu.xml*/

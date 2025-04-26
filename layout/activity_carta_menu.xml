@@ -5,25 +5,69 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".menuCarta.CartaMenu" android:backgroundTint="@color/black">
+    tools:context=".menuCarta.CartaMenu"
+    android:backgroundTint="@color/black">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+            android:layout_height="?attr/actionBarSize">
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/negro"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+        <!-- Contenedor para el carrito + contador -->
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="16dp">
+
+            <TextView
+                android:id="@+id/cartItemCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3"
+                android:textColor="@android:color/white"
+                android:background="@drawable/circle_red"
+                android:padding="4dp"
+                android:textSize="12sp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="48dp" />
+            <ImageView
+                android:id="@+id/imgCarrito"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="16dp"
+                android:scaleType="fitCenter"
+                android:contentDescription="Carrito"
+                />
+        </FrameLayout>
+        </FrameLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="8dp"/>
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="8dp" />
+
+        <Button
+            android:id="@+id/btnConfirmarPedido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Confirmar Pedido"
+            android:layout_margin="8dp"
+            android:backgroundTint="?attr/colorPrimary"
+            android:textColor="@android:color/white"
+            android:visibility="gone" />
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
@@ -34,4 +78,5 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/drawer_menu" />
+
 </androidx.drawerlayout.widget.DrawerLayout>

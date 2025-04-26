@@ -17,15 +17,15 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ordenes.pedidosclientes.PedidoClienteActivity"
+            android:exported="false" />
+        <activity
             android:name=".ordenes.ListapedidosActivity"
             android:exported="false" />
         <activity
-
             android:name=".ordenes.PedidosActivity"
             android:exported="false" />
-        <activity android:name=".ordenes.ver_pedidos.VerPedidosActivity"></activity>
-
-
+        <activity android:name=".ordenes.ver_pedidos.VerPedidosActivity" />
         <activity
             android:name=".compras.GastosActivity"
             android:exported="false" />
@@ -48,10 +48,10 @@
             android:name=".consultaMysql.consulta"
             android:exported="true" />
         <activity android:name=".deudas.PagosActivity">
+
             <!-- Opcionalmente, puedes agregar un intent-filter si esta actividad es la principal -->
         </activity>
+
     </application>
-
-
 
 </manifest>
