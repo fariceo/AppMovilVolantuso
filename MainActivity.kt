@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         setupImageButtons()
 
         // Verificar sesión de usuario
-        checkUserSession()
+       // checkUserSession()
 
         // Configurar el botón para redirigir a GastosActivity
         val btnVerGastos = findViewById<ImageButton>(R.id.btnVerGastos)
@@ -103,6 +103,7 @@ class MainActivity : AppCompatActivity() {
             .into(imageButton)
     }
 
+    /*
     private fun checkUserSession() {
         val sharedPreferences = getSharedPreferences("user_session", Context.MODE_PRIVATE)
         val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
@@ -112,7 +113,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
+*/
     fun guardar(view: View) {
         val url = "https://elpollovolantuso.com/testing.php"
         val usuarioText = usuario.text.toString()
