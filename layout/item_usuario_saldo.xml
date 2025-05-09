@@ -1,0 +1,48 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="#fcf3cf">
+
+    <TextView
+        android:id="@+id/txtUsuario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Usuario"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:background="#000000"
+        android:textColor="#00FFFF"
+        android:padding="8dp"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/txtSaldo"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Saldo Pendiente" />
+
+    <TextView
+        android:id="@+id/txtAccion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:background="@android:color/transparent"
+        android:textColor="@android:color/black"/>
+
+    <!-- Botón para eliminar deuda -->
+    <Button
+        android:id="@+id/btnEliminarDeuda"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="X"
+        android:textColor="#f01010"
+android:layout_gravity="center"
+        android:background="@android:color/white"
+        android:layout_marginStart="8dp"
+        android:gravity="center"/>
+</LinearLayout>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Encabezado con logo e imagen -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/logoImageView"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="16dp"
+                android:src="@mipmap/icono_volantuso"
+                android:contentDescription="Logo" />
+            <Button
+                android:id="@+id/botonVerPedidos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ver Pedidos" />
+
+
+            <ImageView
+                android:id="@+id/imagenDesdeUrl"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:contentDescription="Imagen desde URL" />
+        </LinearLayout>
+
+        <!-- Usuario -->
+        <EditText
+            android:id="@+id/editTextBuscarUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Buscar Usuario"
+            android:inputType="text" />
+
+        <TextView
+            android:id="@+id/textViewSaldoPendiente"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Saldo pendiente: $0.00"
+            android:textSize="16sp"
+            android:paddingVertical="4dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewUsuarios"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <!-- Producto -->
+        <EditText
+            android:id="@+id/editTextBuscarProducto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Buscar Producto"
+            android:inputType="text" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewProductos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <!-- Cantidad -->
+        <EditText
+            android:id="@+id/editTextCantidad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Cantidad"
+            android:inputType="number"
+            android:padding="12dp" />
+
+        <!-- Total -->
+        <TextView
+            android:id="@+id/textViewTotal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Total: $0.00"
+            android:textSize="18sp"
+            android:paddingTop="8dp" />
+
+        <!-- Confirmar -->
+        <Button
+            android:id="@+id/botonConfirmar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Confirmar Pedido"
+            android:layout_marginTop="16dp"/>
+    </LinearLayout>
+</ScrollView>

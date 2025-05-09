@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:background="?android:attr/selectableItemBackground">
+
+    <!-- Nombre del producto -->
+    <TextView
+        android:id="@+id/txtNombreProducto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nombre del producto"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="5dp" />
+
+    <!-- Cantidad del producto -->
+    <TextView
+        android:id="@+id/txtCantidad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cantidad: 1"
+        android:textSize="14sp"
+        android:layout_marginBottom="5dp" />
+
+    <!-- Precio del producto -->
+    <TextView
+        android:id="@+id/txtPrecio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Precio: $0.00"
+        android:textSize="14sp"
+        android:layout_marginBottom="5dp" />
+
+    <!-- Subtotal del producto -->
+    <TextView
+        android:id="@+id/txtSubtotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Subtotal: $0.00"
+        android:textSize="14sp"
+        android:layout_marginBottom="10dp" />
+
+    <!-- Opciones de delivery -->
+    <RadioGroup
+        android:id="@+id/radioGroupDelivery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Opción 'Para llevar' -->
+        <RadioButton
+            android:id="@+id/radioTakeout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Para llevar" />
+
+        <!-- Opción 'Delivery' -->
+        <RadioButton
+            android:id="@+id/radioDefault"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delivery" />
+    </RadioGroup>
+
+    <!-- CheckBox para seleccionar delivery adicional -->
+    <CheckBox
+        android:id="@+id/checkBoxSelectDelivery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar delivery adicional"
+        android:visibility="gone" />
+
+</LinearLayout>
