@@ -7,95 +7,101 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:padding="16dp">
-
-    <EditText
-        android:id="@+id/usuario"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Usuario"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <EditText
-        android:id="@+id/producto"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Producto"
-        app:layout_constraintTop_toBottomOf="@id/usuario"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"/>
-
-    <Button
-        android:id="@+id/iralogin"
+    <TextView
+        android:id="@+id/textViewSaludo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ir a Login"
-        app:layout_constraintTop_toBottomOf="@id/producto"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="12dp"/>
+        android:text="Hola"
+        android:textSize="24sp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center" />
 
-    <!-- Alinear los botones horizontalmente -->
+    <ImageButton
+        android:id="@+id/iralogin"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@android:color/transparent"
+        android:scaleType="centerInside"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/buttonLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@id/iralogin"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ImageButton
             android:id="@+id/carta"
-            android:layout_width="100dp"
+            android:layout_width="0dp"
             android:layout_height="100dp"
             android:contentDescription="Ingresar Orden"
             android:background="@android:color/transparent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnIngresarOrden"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
             android:layout_marginEnd="8dp"/>
 
         <ImageButton
             android:id="@+id/btnIngresarOrden"
-            android:layout_width="100dp"
+            android:layout_width="0dp"
             android:layout_height="100dp"
             android:contentDescription="Ingresar Orden"
             android:background="@android:color/transparent"
             app:layout_constraintStart_toEndOf="@id/carta"
+            app:layout_constraintEnd_toStartOf="@id/btnVerGastos"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginEnd="8dp"/>
 
         <ImageButton
             android:id="@+id/btnVerGastos"
-            android:layout_width="100dp"
+            android:layout_width="0dp"
             android:layout_height="100dp"
             android:contentDescription="Ver Gastos"
             android:background="@android:color/transparent"
             app:layout_constraintStart_toEndOf="@id/btnIngresarOrden"
+            app:layout_constraintEnd_toStartOf="@id/btnSaldoPendiente"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginEnd="8dp"/>
 
         <ImageButton
             android:id="@+id/btnSaldoPendiente"
-            android:layout_width="100dp"
+            android:layout_width="0dp"
             android:layout_height="100dp"
             android:contentDescription="Saldo Pendiente"
             android:background="@android:color/transparent"
             app:layout_constraintStart_toEndOf="@id/btnVerGastos"
+            app:layout_constraintEnd_toStartOf="@id/consulta"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginEnd="8dp"/>
 
         <ImageButton
             android:id="@+id/consulta"
-            android:layout_width="100dp"
+            android:layout_width="0dp"
             android:layout_height="100dp"
             android:contentDescription="Consulta Ventas"
             android:background="@android:color/transparent"
             app:layout_constraintStart_toEndOf="@id/btnSaldoPendiente"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <Button
+            android:id="@+id/ir_delivery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ir a Delivery" />
+
+        <Button
+            android:id="@+id/compartir_ubicacion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Compartir ubicacion" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

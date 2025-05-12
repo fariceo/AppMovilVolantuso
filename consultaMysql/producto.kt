@@ -6,9 +6,11 @@ data class Producto(
     val cantidad:Int,
     val precio:Double,
     val total:Double,
+    val metodo_pago:String,
     val fecha: String
 )
 
 /*
 * consulta_activity.xml
+* item_pedido_cliente
 * */

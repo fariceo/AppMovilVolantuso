@@ -22,6 +22,7 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.elrancho.cocina.MainActivity
 import com.elrancho.cocina.ordenes.ListapedidosActivity
+import com.elrancho.cocina.ordenes.ver_pedidos.PedidoAgrupado
 import com.elrancho.cocina.ordenes.ver_pedidos.VerPedidosActivity
 
 
@@ -60,11 +61,9 @@ class PedidosActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         logoImageView = findViewById(R.id.logoImageView)
-        imagenDesdeUrl = findViewById(R.id.imagenDesdeUrl)
 
 
-        // Encontrar el botón por su ID
-        val botonVerPedidos: Button = findViewById(R.id.botonVerPedidos)
+
 
 
         val btnVolverIngresarPedido: ImageView = findViewById(R.id.logoImageView)
@@ -122,25 +121,22 @@ class PedidosActivity : AppCompatActivity() {
         }
 
         // Cargar la imagen desde una URL usando Glide
+        val botonVerPedidos = findViewById<ImageView>(R.id.botonVerPedidos)
+
         val urlImagen =
             "https://thumbs.dreamstime.com/b/vector-de-icono-l%C3%ADnea-lista-pedidos-la-%C3%B3rdenes-vectores-archivos-f%C3%A1cil-editar-277106601.jpg"
         Glide.with(this)
             .load(urlImagen)
-            .into(imagenDesdeUrl)
+            .into(botonVerPedidos)
 
         // Configurar el OnClickListener para la imagen desde la URL (navegar a otra actividad)
-        imagenDesdeUrl.setOnClickListener {
-            // Abrir una nueva actividad
-            val intent = Intent(this, ListapedidosActivity::class.java)
+
+        botonVerPedidos.setOnClickListener {
+            val intent = Intent(this, VerPedidosActivity::class.java)
             startActivity(intent)
         }
 
-        // Configurar el OnClickListener para el botón
-        botonVerPedidos.setOnClickListener {
-            // Crear un Intent para navegar a VerPedidosActivity
-            val intent = Intent(this@PedidosActivity, VerPedidosActivity::class.java)
-            startActivity(intent)
-        }
+
 
     }
 
@@ -183,9 +179,15 @@ class PedidosActivity : AppCompatActivity() {
         Volley.newRequestQueue(this).add(request)
     }
 
+    // Definir una bandera a nivel de la actividad
+    var productoSeleccionadoFlag = false
 
     private fun buscarProducto(nombre: String) {
-        //val url = "https://elpollovolantuso.com/asi_sistema/android/buscar_menu.php?nombre=$nombre"
+        // Verifica si el producto ya ha sido seleccionado
+        if (productoSeleccionadoFlag) {
+            return // Si ya se seleccionó un producto, no hacer nada
+        }
+
         val url = "http://35.223.94.102/asi_sistema/android/buscar_menu.php?nombre=$nombre"
         val request = StringRequest(com.android.volley.Request.Method.GET, url, { response ->
             val productos = JSONArray(response)
@@ -196,11 +198,17 @@ class PedidosActivity : AppCompatActivity() {
                 val precio = item.getDouble("precio")
                 lista.add(Producto(nombreProducto, precio))
             }
+
+            // Crear y asignar el adaptador con los productos obtenidos
             adapter = ProductoAdapter(lista) { producto ->
+                // Marcar que el producto ha sido seleccionado
+                productoSeleccionadoFlag = true
                 productoSeleccionado = producto
                 buscarEditText.setText(producto.nombre) // Establecer el texto del EditText
                 actualizarTotal() // Asegurarse de que el total se actualice
+                recyclerView.visibility = RecyclerView.INVISIBLE // Opcional, si quieres ocultar el RecyclerView
             }
+
             recyclerView.adapter = adapter
             recyclerView.visibility = RecyclerView.VISIBLE // Asegura que el RecyclerView se muestre
         }, {
@@ -209,6 +217,8 @@ class PedidosActivity : AppCompatActivity() {
 
         Volley.newRequestQueue(this).add(request)
     }
+
+
 
     private fun actualizarTotal() {
         // Verifica si se tiene un producto seleccionado y una cantidad válida

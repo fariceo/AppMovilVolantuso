@@ -5,7 +5,8 @@ data class PedidoAgrupado(
     val usuario: String,
     val total: Double,
     var fecha: String,
-    val productos: List<DetalleProducto>
+    val productos: List<DetalleProducto>,
+    var metodo_pago: String // 👈 nuevo campo
 )
 
 

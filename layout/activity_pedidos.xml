@@ -23,18 +23,11 @@
                 android:layout_marginEnd="16dp"
                 android:src="@mipmap/icono_volantuso"
                 android:contentDescription="Logo" />
-            <Button
-                android:id="@+id/botonVerPedidos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ver Pedidos" />
-
-
             <ImageView
-                android:id="@+id/imagenDesdeUrl"
+                android:id="@+id/botonVerPedidos"
                 android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:contentDescription="Imagen desde URL" />
+                android:layout_height="50dp"/>
+
         </LinearLayout>
 
         <!-- Usuario -->
@@ -92,11 +85,13 @@
             android:paddingTop="8dp" />
 
         <!-- Confirmar -->
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/botonConfirmar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Confirmar Pedido"
-            android:layout_marginTop="16dp"/>
+            android:text="Ingresar Pedido"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/boton_fondo_selector"
+            android:textColor="#00FF00" />
     </LinearLayout>
 </ScrollView>

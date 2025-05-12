@@ -35,14 +35,18 @@
         android:textColor="@android:color/black"/>
 
     <!-- Botón para eliminar deuda -->
-    <Button
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnEliminarDeuda"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:text="X"
         android:textColor="#f01010"
-android:layout_gravity="center"
-        android:background="@android:color/white"
-        android:layout_marginStart="8dp"
+        android:background="@drawable/boton_redondeado_blanco"
+        android:backgroundTint="@null"
+        android:layout_gravity="end"
+        android:layout_marginEnd="8dp"
         android:gravity="center"/>
+
+
 </LinearLayout>

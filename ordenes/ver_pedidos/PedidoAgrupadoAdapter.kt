@@ -8,6 +8,12 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.elrancho.cocina.R
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import android.widget.Toast
+import android.content.Context
 
 class PedidoAgrupadoAdapter(
     private val listaPedidos: MutableList<PedidoAgrupado>,
@@ -16,13 +22,11 @@ class PedidoAgrupadoAdapter(
 
     // Interfaz para manejar el click en el botón fiado
     interface OnFiadoClickListener {
-        fun onAgregarFiado(saldo: Double, usuario: String)
-
-        fun onPedidoListo(usuario: String, total: Double, delivery_type: String)
+        fun onAgregarFiado(saldo: Double, usuario: String, posicion: Int)
+        fun onPedidoListo(usuario: String, total: Double, delivery_type: String, metodoPago: String)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PedidoViewHolder {
-
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_pedido_agrupado, parent, false)
         return PedidoViewHolder(view)
@@ -50,13 +54,13 @@ class PedidoAgrupadoAdapter(
                     pedido.fecha = nuevaFecha
 
                     val url = "http://35.223.94.102/asi_sistema/android/actualizar_fecha.php"
-                    val request = object : com.android.volley.toolbox.StringRequest(
+                    val request = object : StringRequest(
                         Method.POST, url,
                         { response ->
-                            android.widget.Toast.makeText(context, "Fecha actualizada", android.widget.Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Fecha actualizada", Toast.LENGTH_SHORT).show()
                         },
                         { error ->
-                            android.widget.Toast.makeText(context, "Error al actualizar", android.widget.Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Error al actualizar", Toast.LENGTH_SHORT).show()
                         }
                     ) {
                         override fun getParams(): Map<String, String> {
@@ -67,22 +71,20 @@ class PedidoAgrupadoAdapter(
                         }
                     }
 
-                    com.android.volley.toolbox.Volley.newRequestQueue(context).add(request)
+                    Volley.newRequestQueue(context).add(request)
                     dialog.dismiss()
                 }
                 .setNegativeButton("Cancelar") { dialog, _ -> dialog.dismiss() }
                 .show()
         }
 
-
-
         // Actualizar total con los costos de delivery
         actualizarTotal(pedido, holder)
 
         holder.layoutProductos.removeAllViews()
 
-        var totalDelivery = 0.0 // Variable para calcular el costo total de delivery
-        var checkBoxSelected = false // Variable para verificar si el CheckBox está seleccionado
+        var totalDelivery = 0.0
+        var checkBoxSelected = false
 
         // Añadir productos
         for (producto in pedido.productos) {
@@ -102,61 +104,49 @@ class PedidoAgrupadoAdapter(
             txtPrecio.text = "Precio: $${producto.precio}"
             txtSubTotal.text = "Subtotal: $${"%.2f".format(producto.total + producto.delivery_cost)}"
 
-            // Configurar RadioButtons según el tipo de delivery
             when (producto.delivery_type) {
-                "takeout" -> {
-                    radioTakeout.isChecked = true
-                }
-                "default" -> {
-                    radioDefault.isChecked = true
-                }
+                "takeout" -> radioTakeout.isChecked = true
+                "default" -> radioDefault.isChecked = true
             }
 
-            // Actualizar costo de delivery cuando se cambia la opción
             radioGroup.setOnCheckedChangeListener { _, checkedId ->
                 when (checkedId) {
                     R.id.radioTakeout -> {
-                        producto.delivery_cost = 0.25 * producto.cantidad // Opción "para llevar"
+                        producto.delivery_cost = 0.25 * producto.cantidad
                     }
                     R.id.radioDefault -> {
-                        producto.delivery_cost = 0.0 // Opción "delivery"
+                        producto.delivery_cost = 0.0
                     }
                 }
 
-                // Actualizar el subtotal individual con delivery
                 txtSubTotal.text = "Subtotal: $${"%.2f".format(producto.total + producto.delivery_cost)}"
-
-                // Actualizar el total general del pedido
                 actualizarTotal(pedido, holder)
             }
 
             holder.layoutProductos.addView(productoView)
         }
 
-        // CheckBox para seleccionar delivery (solo aparece al final)
         val checkBoxDelivery = holder.itemView.findViewById<CheckBox>(R.id.checkBoxSelectDelivery)
-
-        // Verificar si el CheckBox está seleccionado
         checkBoxDelivery.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 checkBoxSelected = true
+                actualizarDeliveryEnBaseDeDatos(holder.itemView.context, pedido.usuario, "delivery")
             } else {
                 checkBoxSelected = false
+                actualizarDeliveryEnBaseDeDatos(holder.itemView.context, pedido.usuario, "no_delivery")
             }
-
-            // Actualizar el total con el costo de delivery adicional
             actualizarTotal(pedido, holder, checkBoxSelected)
         }
 
-        // Aquí solo declaramos el botón una vez
+        // Agregar saldo fiado
         val buttonFiado = holder.itemView.findViewById<Button>(R.id.buttonFiado)
         buttonFiado.setOnClickListener {
             val context = holder.itemView.context
             val input = EditText(context)
             input.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
 
-            // Usamos el nombre del usuario del pedido
             val usuario = pedido.usuario
+            val posicion = holder.adapterPosition
 
             AlertDialog.Builder(context)
                 .setTitle("Agregar saldo fiado a $usuario")
@@ -164,8 +154,8 @@ class PedidoAgrupadoAdapter(
                 .setPositiveButton("Aceptar") { dialog, _ ->
                     val valorIngresado = input.text.toString().toDoubleOrNull()
                     if (valorIngresado != null) {
-                       listener.onAgregarFiado(valorIngresado, pedido.usuario) // Llamar al listener
-                        } else {
+                        listener.onAgregarFiado(valorIngresado, usuario, posicion)
+                    } else {
                         Toast.makeText(context, "Ingrese un número válido", Toast.LENGTH_SHORT).show()
                     }
                     dialog.dismiss()
@@ -174,46 +164,35 @@ class PedidoAgrupadoAdapter(
                 .show()
         }
 
+        // Marcar pedido como listo
         val btnPedidoListo = holder.itemView.findViewById<Button>(R.id.listo)
-
         btnPedidoListo.setOnClickListener {
             val totalText = holder.txtTotal.text.toString().replace("Total: $", "")
             val total = totalText.toDoubleOrNull() ?: 0.0
 
             val deliveryType = if (checkBoxSelected) "delivery" else "takeout"
+            val metodoPago = pedido.metodo_pago // 👈 obtenemos el método de pago
 
-            // Animación de desvanecimiento y deslizamiento
             holder.itemView.animate()
                 .alpha(0f)
                 .translationX(holder.itemView.width.toFloat())
                 .setDuration(500)
                 .withEndAction {
-                    listener.onPedidoListo(pedido.usuario, total, deliveryType)
+                    listener.onPedidoListo(pedido.usuario, total, deliveryType, metodoPago)
                     eliminarPedidoPorUsuario(pedido.usuario)
                 }
                 .start()
         }
-
-
-
-
-
     }
 
     override fun getItemCount(): Int = listaPedidos.size
 
-    // Función para actualizar el total del pedido
     private fun actualizarTotal(pedido: PedidoAgrupado, holder: PedidoViewHolder, applyDelivery: Boolean = false) {
         var totalConDelivery = pedido.productos.sumOf { it.total + it.delivery_cost }
-
-        // Si el CheckBox está seleccionado, añadir $2.5 al total
-        if (applyDelivery) {
-            totalConDelivery += 2.5
-        }
-
+        if (applyDelivery) totalConDelivery += 2.5
         holder.txtTotal.text = "Total: $${"%.2f".format(totalConDelivery)}"
     }
-    // ✅ FUNCIÓN QUE ACTUALIZA EL RECYCLER VIEW
+
     fun eliminarPedidoPorUsuario(usuario: String) {
         val index = listaPedidos.indexOfFirst { it.usuario == usuario }
         if (index != -1) {
@@ -221,10 +200,33 @@ class PedidoAgrupadoAdapter(
             notifyItemRemoved(index)
         }
     }
+
     class PedidoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val txtUsuario: TextView = itemView.findViewById(R.id.txtUsuario)
         val txtFecha: TextView = itemView.findViewById(R.id.txtFecha)
         val txtTotal: TextView = itemView.findViewById(R.id.txtTotal)
         val layoutProductos: ViewGroup = itemView.findViewById(R.id.layoutProductos)
+    }
+
+    private fun actualizarDeliveryEnBaseDeDatos(context: Context, usuario: String, tipoEntrega: String) {
+        val url = "http://35.223.94.102/asi_sistema/android/actualizar_delivery.php"
+
+        val stringRequest = object : StringRequest(Request.Method.POST, url,
+            Response.Listener { response ->
+                Toast.makeText(context, "Pedido actualizado correctamente", Toast.LENGTH_SHORT).show()
+            },
+            Response.ErrorListener { error ->
+                Toast.makeText(context, "Error en la conexión: ${error.message}", Toast.LENGTH_SHORT).show()
+            }) {
+
+            override fun getParams(): Map<String, String> {
+                val params = HashMap<String, String>()
+                params["usuario"] = usuario  // Aquí pasas el usuario que ya tienes en el pedido
+                params["delivery"] = tipoEntrega
+                return params
+            }
+        }
+
+        Volley.newRequestQueue(context).add(stringRequest)
     }
 }

@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -16,6 +18,25 @@
         android:theme="@style/Theme.Cocina"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".Motorizado.delivery.CompartirUbicacionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Motorizado.delivery.DeliveryActivity"
+            android:exported="true"></activity>
+        <activity
+            android:name=".usuarios.login.RegistroUsuarioActivity"
+            android:exported="false" />
         <activity
             android:name=".ordenes.pedidosclientes.PedidoClienteActivity"
             android:exported="false" />
@@ -30,15 +51,6 @@
             android:name=".compras.GastosActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".usuarios.login.LoginActivity"
             android:exported="true" />
         <activity
@@ -51,7 +63,11 @@
 
             <!-- Opcionalmente, puedes agregar un intent-filter si esta actividad es la principal -->
         </activity>
+        <activity android:name=".deudas.historialCredito.HistorialCreditoActivity" />
 
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyC02kc4cW6kd5IV1ruJkpNOJrfS_p-lJxc" />
     </application>
 
 </manifest>

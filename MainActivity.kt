@@ -3,11 +3,8 @@ package com.elrancho.cocina
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.elrancho.cocina.compras.GastosActivity
@@ -17,83 +14,92 @@ import com.elrancho.cocina.ordenes.PedidosActivity
 import com.elrancho.cocina.usuarios.login.LoginActivity
 import com.elrancho.cocina.deudas.PagosActivity
 import okhttp3.*
-import org.json.JSONObject
-import java.io.IOException
+import android.widget.TextView
+import com.elrancho.cocina.Motorizado.delivery.CompartirUbicacionActivity
+import com.elrancho.cocina.Motorizado.delivery.DeliveryActivity
+import com.elrancho.cocina.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var usuario: EditText
-    private lateinit var producto: EditText
+
     private val client = OkHttpClient()
     private lateinit var btnIngresarOrden: ImageButton
+    private lateinit var btnVerGastos: ImageButton
+    private lateinit var btnSaldoPendiente: ImageButton
+    private lateinit var btnventas: ImageButton
+    private lateinit var btnCarta: ImageButton
+    private lateinit var textViewSaludo: TextView
+
+    private lateinit var btnIrDelivery: Button
+    private lateinit var btnCompartirUbicacion: Button
+
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        usuario = findViewById(R.id.usuario)
-        producto = findViewById(R.id.producto)
+        // Inicializar botones
         btnIngresarOrden = findViewById(R.id.btnIngresarOrden)
+        btnVerGastos = findViewById(R.id.btnVerGastos)
+        btnSaldoPendiente = findViewById(R.id.btnSaldoPendiente)
+        btnventas = findViewById(R.id.consulta)
+        btnCarta = findViewById(R.id.carta)
+        btnIrDelivery = findViewById(R.id.ir_delivery) // ← Asignado correctamente
+        btnCompartirUbicacion = findViewById(R.id.compartir_ubicacion) // ← Asignado correctamente
 
-        // Cargar imágenes con Glide para los botones
-        setupImageButtons()
+
+        // Inicializar saludo
+        textViewSaludo = findViewById(R.id.textViewSaludo)
 
         // Verificar sesión de usuario
-       // checkUserSession()
+        checkUserSession()
 
-        // Configurar el botón para redirigir a GastosActivity
-        val btnVerGastos = findViewById<ImageButton>(R.id.btnVerGastos)
-        setupGlideForImageButton(btnVerGastos, "http://35.223.94.102/imagenes/carrito.png")
+        // Mostrar saludo
+        val sharedPreferences = getSharedPreferences("user_session", Context.MODE_PRIVATE)
+        val username = sharedPreferences.getString("username", "Usuario desconocido")
+        textViewSaludo.text = "Bienvenido, $username"
+
+        // Cargar imágenes con Glide
+        setupImageButtons()
+
+        // Configurar clics de botones
         btnVerGastos.setOnClickListener {
             startActivity(Intent(this, GastosActivity::class.java))
         }
 
-        // Configurar el botón para redirigir a PedidosActivity
-        setupGlideForImageButton(btnIngresarOrden, "http://35.223.94.102/imagenes/camarero.jpeg")
         btnIngresarOrden.setOnClickListener {
             startActivity(Intent(this@MainActivity, PedidosActivity::class.java))
         }
 
-        // Botón para ir a la actividad de login
-        val buttonNavigate1: Button = findViewById(R.id.iralogin)
-        buttonNavigate1.setOnClickListener {
-            startActivity(Intent(this, LoginActivity::class.java))
-        }
 
-        // Configurando el botón para ir a la actividad consulta Ventas
-        val btnventas = findViewById<ImageButton>(R.id.consulta)
-        setupGlideForImageButton(btnventas, "http://35.223.94.102/imagenes/historial.png")
         btnventas.setOnClickListener {
             startActivity(Intent(this, consulta::class.java))
         }
 
-        // Botón para ir a la actividad carta
-        val btnCarta = findViewById<ImageButton>(R.id.carta)
-        setupGlideForImageButton(btnCarta, "http://35.223.94.102/imagenes/carta.png")
         btnCarta.setOnClickListener {
             startActivity(Intent(this, CartaMenu::class.java))
         }
 
-        // Configurando el botón para ir a la actividad Pagos
-        val btnSaldoPendiente = findViewById<ImageButton>(R.id.btnSaldoPendiente)
-        setupGlideForImageButton(btnSaldoPendiente, "http://35.223.94.102/imagenes/pago.png")
         btnSaldoPendiente.setOnClickListener {
             startActivity(Intent(this, PagosActivity::class.java))
+        }
+        btnIrDelivery.setOnClickListener {
+            //startActivity(Intent(this, DeliveryActivity::class.java))
+            startActivity(Intent(this, DeliveryActivity::class.java))
+        }
+
+        btnCompartirUbicacion.setOnClickListener {
+            //startActivity(Intent(this, DeliveryActivity::class.java))
+            startActivity(Intent(this, CompartirUbicacionActivity::class.java))
         }
     }
 
     private fun setupImageButtons() {
-        val btnIngresarOrden = findViewById<ImageButton>(R.id.btnIngresarOrden)
-        val btnVerGastos = findViewById<ImageButton>(R.id.btnVerGastos)
-        val btnSaldoPendiente = findViewById<ImageButton>(R.id.btnSaldoPendiente)
-        val btnventas = findViewById<ImageButton>(R.id.consulta)
-        val btncarta = findViewById<ImageButton>(R.id.carta)
-
         setupGlideForImageButton(btnVerGastos, "http://35.223.94.102/imagenes/carrito.png")
         setupGlideForImageButton(btnventas, "http://35.223.94.102/imagenes/historial.png")
         setupGlideForImageButton(btnSaldoPendiente, "http://35.223.94.102/imagenes/pago.png")
         setupGlideForImageButton(btnIngresarOrden, "http://35.223.94.102/imagenes/camarero.jpeg")
-        setupGlideForImageButton(btncarta, "http://35.223.94.102/imagenes/carta.png")
-
+        setupGlideForImageButton(btnCarta, "http://35.223.94.102/imagenes/carta.png")
     }
 
     private fun setupGlideForImageButton(imageButton: ImageButton, imageUrl: String) {
@@ -103,53 +109,35 @@ class MainActivity : AppCompatActivity() {
             .into(imageButton)
     }
 
-    /*
     private fun checkUserSession() {
         val sharedPreferences = getSharedPreferences("user_session", Context.MODE_PRIVATE)
         val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
 
         if (!isLoggedIn) {
+            // Si no está logueado, ir al login y cerrar esta actividad
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
+            finish()
+            return // Importante: detener ejecución aquí
+        }
+
+        // Si está logueado, seguir configurando
+        val iralogin = findViewById<ImageButton>(R.id.iralogin)
+        val urlLogin = "http://35.223.94.102/imagenes/usuarios.png"
+        val urlCerrarSesion = "https://w7.pngwing.com/pngs/749/229/png-transparent-abmeldung-button-icon-shut-s-text-computer-sign.png"
+
+        // Mostrar imagen de cerrar sesión
+        Glide.with(this)
+            .load(urlCerrarSesion)
+            .into(iralogin)
+
+        iralogin.setOnClickListener {
+            // Cierra sesión y regresa al login
+            sharedPreferences.edit().clear().apply()
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
-*/
-    fun guardar(view: View) {
-        val url = "https://elpollovolantuso.com/testing.php"
-        val usuarioText = usuario.text.toString()
-        val productoText = producto.text.toString()
-
-        val formBody = FormBody.Builder()
-            .add("usuario", usuarioText)
-            .add("producto", productoText)
-            .build()
-
-        val request = Request.Builder()
-            .url(url)
-            .post(formBody)
-            .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                runOnUiThread {
-                    Toast.makeText(applicationContext, "Error: ${e.message}", Toast.LENGTH_LONG).show()
-                }
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                response.body?.let { responseBody ->
-                    val responseData = responseBody.string()
-                    val json = JSONObject(responseData)
-                    runOnUiThread {
-                        val message = if (json.getBoolean("success")) {
-                            "Datos insertados correctamente"
-                        } else {
-                            "Error: ${json.getString("message")}"
-                        }
-                        Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
-        })
-    }
 }
+

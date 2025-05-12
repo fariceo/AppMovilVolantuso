@@ -62,15 +62,9 @@
             android:id="@+id/radioDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Delivery" />
+            android:text="Local" />
     </RadioGroup>
 
-    <!-- CheckBox para seleccionar delivery adicional -->
-    <CheckBox
-        android:id="@+id/checkBoxSelectDelivery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Seleccionar delivery adicional"
-        android:visibility="gone" />
+
 
 </LinearLayout>

@@ -100,13 +100,15 @@
                                 usuario = obj.getString("usuario"),
                                 total = obj.getDouble("total"),
                                 fecha = obj.getString("fecha"),
-                                productos = listaProductos
+                                productos = listaProductos,
+                                metodo_pago = obj.getString("metodo_pago") // 👈 extraer del JSON
                             )
                             listaAgrupada.add(pedido)
                         }
 
                         adapter = PedidoAgrupadoAdapter(listaAgrupada, this) // Pasa el listener
                         recyclerView.adapter = adapter
+
                     },
                     { error -> error.printStackTrace() })
 
@@ -114,8 +116,16 @@
             }
 
         // Implementación del método de la interfaz
-        override fun onAgregarFiado(saldo: Double, usuario: String) {
+
+        override fun onAgregarFiado(saldo: Double, usuario: String, posicion: Int) {
             actualizarSaldoFiadoEnServidor(saldo, usuario)
+
+            // Actualiza el objeto en la lista local
+            listaAgrupada[posicion].metodo_pago = "Fiado"
+
+            // Notifica al adapter que ese ítem ha cambiado
+            adapter.notifyItemChanged(posicion)
+
         }
 
         private fun actualizarSaldoFiadoEnServidor(saldo: Double, usuario: String) {
@@ -229,7 +239,7 @@
             }
         }
 
-        override fun onPedidoListo(usuario: String, total: Double,delivery_type: String) {
+        override fun onPedidoListo(usuario: String, total: Double,delivery_type: String, metodoPago: String) {
             //val url = "https://elpollovolantuso.com/asi_sistema/android/pedidos_listo.php"
             val url = "http://35.223.94.102/asi_sistema/android/pedidos_listo.php"
 
@@ -252,7 +262,8 @@
                     return mapOf(
                         "usuario" to usuario,
                         "total" to total.toString(),
-                        "delivery" to delivery_type
+                        "delivery" to delivery_type,
+                        "metodo_pago" to metodoPago  // ✅ ahora sí se envía
 
                     )
 

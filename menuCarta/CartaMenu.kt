@@ -56,9 +56,18 @@ class CartaMenu : AppCompatActivity(), CartaMenuAdapterListener {
 
 
 
-        // Usuario logueado
-        nombreUsuario = intent.getStringExtra("usuario") ?: "test"
-        actualizarContadorCarrito(nombreUsuario)
+        val sharedPreferences = getSharedPreferences("user_session", Context.MODE_PRIVATE)
+        val nombreUsuarioGuardado = sharedPreferences.getString("username", null)
+
+        if (nombreUsuarioGuardado != null) {
+            nombreUsuario = nombreUsuarioGuardado
+            actualizarContadorCarrito(nombreUsuario)
+        } else {
+            // Aquí puedes manejar el caso si por alguna razón el usuario no está logueado
+            Toast.makeText(this, "Usuario no logueado", Toast.LENGTH_SHORT).show()
+            finish() // Opcional: cerrar la actividad si no hay usuario
+        }
+
 
         // Carrito
         val imgCarrito = findViewById<ImageView>(R.id.imgCarrito)
@@ -78,7 +87,7 @@ class CartaMenu : AppCompatActivity(), CartaMenuAdapterListener {
 
 
         // Confirmar pedidos
-        findViewById<Button>(R.id.btnConfirmarPedido).setOnClickListener { confirmarPedidos() }
+        findViewById<Button>(R.id.btnConfirmarPedido).setOnClickListener { confirmarPedidos(nombreUsuario) }
 
         btnConfirmarPedido = findViewById(R.id.btnConfirmarPedido)
         // Inicialmente ocultamos el botón
@@ -115,6 +124,11 @@ class CartaMenu : AppCompatActivity(), CartaMenuAdapterListener {
         // Carga inicial de productos y visibilidad del botón
         fetchProductos()
         verificarMostrarBoton()
+
+
+        // Llama a la función con el usuario correcto
+       // confirmarPedidos(nombreUsuario)
+
     }
 
     private fun fetchProductos(categoria: String? = null) {
@@ -224,8 +238,15 @@ class CartaMenu : AppCompatActivity(), CartaMenuAdapterListener {
                 try {
                     val json = JSONObject(response)
                     val mostrar = json.getBoolean("mostrar")
+                    val cantidad = json.optInt("cantidad", 0) // <-- Obtenemos la cantidad de pedidos
+
+
                     val btnConfirmar = findViewById<Button>(R.id.btnConfirmarPedido)
                     btnConfirmar.visibility = if (mostrar) View.VISIBLE else View.GONE
+
+                    // Actualizamos el contador del carrito aquí
+                    actualizarContadorCarrito(cantidad)
+                    mostrarBtnConfirmarPedido()
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -243,17 +264,16 @@ class CartaMenu : AppCompatActivity(), CartaMenuAdapterListener {
         Volley.newRequestQueue(this).add(request)
     }
 
-    private fun confirmarPedidos() {
+    private fun confirmarPedidos(nombreUsuario: String) {
         val url = "http://35.223.94.102/asi_sistema/android/cambiar_estado_pedido.php"
 
         val stringRequest = object : StringRequest(
             Request.Method.POST, url,
             Response.Listener { response ->
                 Toast.makeText(this, response, Toast.LENGTH_SHORT).show()
-                // Después de confirmar, enviamos la notificación
-                enviarNotificacionPedido("UsuarioNombre", "ProductoNombre") //
-                verificarMostrarBoton() // Actualizar la visibilidad del botón aquí
-                              },
+                enviarNotificacionPedido(nombreUsuario, "ProductoNombre")
+                verificarMostrarBoton()
+            },
             Response.ErrorListener { error ->
                 Toast.makeText(this, "Error al confirmar pedidos: ${error.message}", Toast.LENGTH_SHORT).show()
             }
@@ -261,6 +281,7 @@ class CartaMenu : AppCompatActivity(), CartaMenuAdapterListener {
             override fun getParams(): Map<String, String> {
                 val params = HashMap<String, String>()
                 params["accion"] = "confirmar_todos"
+                params["usuario"] = nombreUsuario
                 return params
             }
         }
@@ -291,14 +312,7 @@ class CartaMenu : AppCompatActivity(), CartaMenuAdapterListener {
         Volley.newRequestQueue(this).add(stringRequest)
     }
 
-
-
-
-
-
-
-
-
+    
 
 
     private fun actualizarContadorCarrito(usuario: String) {
@@ -349,6 +363,7 @@ class CartaMenu : AppCompatActivity(), CartaMenuAdapterListener {
             inputType = InputType.TYPE_CLASS_NUMBER
             hint = "Cantidad"
         }
+
         AlertDialog.Builder(this)
             .setTitle("Ingrese la cantidad")
             .setMessage("¿Cuántas unidades de ${producto.producto} desea agregar?")
@@ -356,6 +371,8 @@ class CartaMenu : AppCompatActivity(), CartaMenuAdapterListener {
             .setPositiveButton("Aceptar") { dialog, _ ->
                 val cantidad = input.text.toString().toIntOrNull() ?: 0
                 if (cantidad > 0) {
+
+
                     enviarProductoAPI(
                         this,
                         nombreUsuario,
@@ -363,10 +380,26 @@ class CartaMenu : AppCompatActivity(), CartaMenuAdapterListener {
                         cantidad,
                         producto.precio
                     )
+                    val cartItemCount = findViewById<TextView>(R.id.cartItemCount)
+                    val imgCarrito = findViewById<ImageView>(R.id.imgCarrito)
 
-                    mostrarBtnConfirmarPedido()
+                    val currentCount = cartItemCount.text.toString().toIntOrNull() ?: 0
+
+                    //cartItemCount.text = newCount.toString()
+                    cartItemCount.visibility = View.VISIBLE
+                    imgCarrito.visibility = View.VISIBLE
+
+                    // Cargar imagen con Glide si aún no está cargada
+                    val carritoImageUrl = "http://35.223.94.102/imagenes/carrito.png"
+                    Glide.with(this)
+                        .load(carritoImageUrl)
+                        .into(imgCarrito)  // Asigna la imagen al ImageView
+
+
                     // Aquí actualizas el contador del carrito
                     actualizarContadorCarrito(cantidad)
+
+                    verificarMostrarBoton()
                 } else {
                     Toast.makeText(this, "Cantidad inválida", Toast.LENGTH_SHORT).show()
                 }
@@ -379,7 +412,7 @@ class CartaMenu : AppCompatActivity(), CartaMenuAdapterListener {
 
  fun mostrarBtnConfirmarPedido() {
         // Muestra el botón de Confirmar Pedido después de que se ingrese la cantidad
-        btnConfirmarPedido.visibility = View.VISIBLE
+       // btnConfirmarPedido.visibility = View.VISIBLE
     }
 
 
@@ -388,7 +421,49 @@ class CartaMenu : AppCompatActivity(), CartaMenuAdapterListener {
         val cartItemCount = findViewById<TextView>(R.id.cartItemCount)
         val currentCount = cartItemCount.text.toString().toIntOrNull() ?: 0
         cartItemCount.text = (currentCount + cantidad).toString()  // Actualizas el contador
+
+
     }
+
+    private fun actualizarContadorCarritoDesdeServidor(usuario: String) {
+        val url = "http://35.223.94.102/asi_sistema/android/carrito.php"
+        val stringRequest = object : StringRequest(
+            Method.POST, url,
+            { response ->
+                val json = JSONObject(response)
+                val cantidad = json.getInt("cantidad")
+
+                val cartItemCount = findViewById<TextView>(R.id.cartItemCount)
+                val imgCarrito = findViewById<ImageView>(R.id.imgCarrito)
+
+                if (cantidad > 0) {
+                    cartItemCount.text = cantidad.toString()
+                    cartItemCount.visibility = View.VISIBLE
+                    imgCarrito.visibility = View.VISIBLE
+
+                    val carritoImageUrl = "http://35.223.94.102/imagenes/carrito.png"
+                    Glide.with(this)
+                        .load(carritoImageUrl)
+                        .into(imgCarrito)  // Asigna la imagen al ImageView
+                } else {
+                    cartItemCount.visibility = View.GONE
+                    imgCarrito.visibility = View.GONE
+                }
+            },
+            { error ->
+                error.printStackTrace()
+            }
+        ) {
+            override fun getParams(): MutableMap<String, String> {
+                val params = HashMap<String, String>()
+                params["usuario"] = usuario
+                return params
+            }
+        }
+
+        Volley.newRequestQueue(this).add(stringRequest)
+    }
+
 // Llamar a la función pasando la cantidad
 
     private fun enviarProductoAPI(

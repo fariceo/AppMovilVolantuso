@@ -34,7 +34,7 @@ class consulta : AppCompatActivity() {
 
     private fun fetchProductos() {
         val request = Request.Builder()
-            .url("http://35.223.94.102/asi_sistema/android/testing.php") // Corregir la URL
+            .url("http://35.223.94.102/asi_sistema/android/consulta_ventas.php") // Corregir la URL
             .build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -55,8 +55,10 @@ class consulta : AppCompatActivity() {
                             val cantidad = jsonObject.getInt("cantidad")
                             val precio = jsonObject.getDouble("precio")
                             val total = jsonObject.getDouble("total")
+                            val metodo_pago = jsonObject.getString("metodo_pago")
                             val fecha = jsonObject.getString("fecha")
-                            productos.add(Producto(usuario, producto, cantidad, precio, total, fecha))
+
+                            productos.add(Producto(usuario, producto, cantidad, precio, total, metodo_pago,fecha))
                         }
 
                         // Notificar al adapter que los datos han cambiado
